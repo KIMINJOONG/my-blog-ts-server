@@ -31,7 +31,7 @@ app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
 });
 
 mongoose
-    .connect("mongodb://localhost:27017/youtube", {
+    .connect("mongodb://localhost:27017/my-blog-ts", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
