@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import { NextFunction } from "express";
+
+const saltRounds: Number = 10;
 
 interface User extends mongoose.Document {
     name: string;
@@ -39,6 +43,14 @@ const UserSchema = new mongoose.Schema({
     tokenExp: {
         type: Number
     }
+});
+
+UserSchema.pre("save", function(this: User, next: NextFunction) {
+    // let user = this;
+    // if (user.isModified("password")) {
+    //     bcrypt.genSalt(saltRounds, function(err: , salt:string):void {});
+    // }
+    next();
 });
 
 const User = mongoose.model<User>("User", UserSchema);

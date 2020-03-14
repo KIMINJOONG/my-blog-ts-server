@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
-import User from "./models/User";
+import users from "./api/User";
 
 const app = express();
 
@@ -41,16 +41,7 @@ mongoose
     .then(() => console.log("mongo db success"))
     .catch(err => console.log(err));
 
-app.post("/", async (req, res) => {
-    console.log("hh");
-    try {
-        const user = await User.create(req.body);
-        await user.save();
-        return res.status(200).json({ success: true });
-    } catch (error) {
-        return res.json({ success: true, error });
-    }
-});
+app.use("/users", users);
 
 app.listen(4000, () => {
     console.log("start");
