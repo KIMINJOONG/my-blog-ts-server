@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import users from "./api/User";
+import { responseMessage } from "./responsesMessage";
 
 const app = express();
 
@@ -9,7 +10,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-interface Err extends Error {
+export interface Err extends Error {
     status: number;
     data?: any;
 }
@@ -20,16 +21,6 @@ interface Err extends Error {
 //     err.status = 404;
 //     next(err);
 // });
-
-// error handle
-app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
-    // render the error page
-    res.status(err.status || 500);
-    res.json({
-        message: err.message,
-        data: err.data
-    });
-});
 
 mongoose
     .connect("mongodb://localhost:27017/my-blog-ts", {
@@ -42,6 +33,22 @@ mongoose
     .catch(err => console.log(err));
 
 app.use("/users", users);
+
+// error handle
+app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
+    // render the error page
+    res.status(err.status || 500);
+
+    res.json(
+        responseMessage(
+            {
+                success: false,
+                message: err.message
+            },
+            err.data
+        )
+    );
+});
 
 app.listen(4000, () => {
     console.log("start");
