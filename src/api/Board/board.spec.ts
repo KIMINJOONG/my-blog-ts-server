@@ -4,7 +4,7 @@ import app from "../../app";
 import should from "should";
 import Board from "../../models/Board";
 
-describe("GET users는", () => {
+describe("GET boards는", () => {
     const boards = [
         { title: "제목1", content: "내용1", category: 1 },
         { title: "제목2", content: "내용2", category: 2 },
