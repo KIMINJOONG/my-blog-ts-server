@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import users from "./api/User";
+import boards from "./api/Board";
 import { responseMessage } from "./responsesMessage";
 
 const app = express();
@@ -33,6 +34,7 @@ mongoose
     .catch(err => console.log(err));
 
 app.use("/users", users);
+app.use("/boards", boards);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {

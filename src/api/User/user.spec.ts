@@ -4,7 +4,7 @@ import app from "../../app";
 import "should";
 import User from "../../models/User";
 
-describe("GET users는", () => {
+describe.only("GET users는", () => {
     const users = [
         { name: "alice", email: "test@test.com", password: "test1234" },
         { name: "bek", email: "test@test1.com", password: "test123" },
@@ -19,8 +19,7 @@ describe("GET users는", () => {
             request(app)
                 .get("/users")
                 .end((err, res) => {
-                    console.log("res: ", res);
-                    res.body.users.should.be.instanceOf(Array);
+                    res.body.data.should.be.instanceOf(Array);
                     done();
                 });
         });
