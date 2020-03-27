@@ -92,7 +92,7 @@ describe("POST users는", () => {
         });
 
         it("생성된 유저 객체를 반환한다.", done => {
-            body.user.should.have.property("_id");
+            body.data.should.have.property("_id");
             done();
         });
 

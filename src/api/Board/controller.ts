@@ -61,6 +61,50 @@ export default {
             next(error);
         }
     },
-    update: () => {},
-    destroy: () => {}
+    update: async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void | Response> => {
+        const { id } = req.params;
+        const { title } = req.body;
+        try {
+            const board = await Board.findOneAndUpdate(
+                { _id: id },
+                { title },
+                { new: true }
+            );
+            if (!board) {
+                const error = {
+                    status: -1,
+                    data: null,
+                    message: ""
+                };
+                error.status = 404;
+                error.message = "존재하지 않는 유저입니다.";
+                return next(error);
+            }
+
+            return res.json(
+                responseMessage({ success: true, message: "" }, board)
+            );
+        } catch (error) {
+            error.status = 404;
+            return next(error);
+        }
+    },
+    destroy: async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void | Response> => {
+        const { id } = req.params;
+        try {
+            await Board.deleteOne({ _id: id });
+            return res.json(responseMessage({ success: true, message: "" }));
+        } catch (error) {
+            error.status = 404;
+            return next(error);
+        }
+    }
 };
