@@ -12,7 +12,13 @@ const BoardSchema = new mongoose.Schema({
     content: {
         type: String
     },
-    category: Number
+    category: Number,
+    hashtags: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Hashtag"
+        }
+    ]
 });
 
 const Board = mongoose.model<Board>("Board", BoardSchema);
