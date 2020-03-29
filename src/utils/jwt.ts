@@ -17,10 +17,11 @@ export const decodeJWT = async (token: string): Promise<User | undefined> => {
 
         const { id } = decoded;
         if (id) {
-            const user = await User.findOne({ _id: id });
-            if (user) {
-                return user;
+            const user: User | null = await User.findOne({ _id: id });
+            if (!user) {
+                return undefined;
             }
+            return user;
         }
     }
 };

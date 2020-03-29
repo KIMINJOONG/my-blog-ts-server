@@ -3,8 +3,9 @@ import request from "supertest";
 import app from "../../app";
 import "should";
 import User from "../../models/User";
+import { savePassword } from "../../utils/password";
 
-describe.only("GET users는", () => {
+describe("GET users는", () => {
     const users = [
         { name: "alice", email: "test@test.com", password: "test1234" },
         { name: "bek", email: "test@test1.com", password: "test123" },
@@ -143,7 +144,7 @@ describe("PUT users/:id 는 ", () => {
     });
 });
 
-describe.only("DELETE /users/:id는", () => {
+describe("DELETE /users/:id는", () => {
     const users = [
         { name: "alice", email: "test@test.com", password: "test1234" },
         { name: "bek", email: "test@test1.com", password: "test123" },
@@ -174,6 +175,69 @@ describe.only("DELETE /users/:id는", () => {
                 .end(done);
         });
     });
+    after(async () => {
+        return await User.deleteMany({});
+    });
+});
+
+describe("POST /users/login은", () => {
+    const user = {
+        name: "alice",
+        email: "test@test.com",
+        password: "test1234"
+    };
+
+    before(async () => {
+        const hashedPassword = await savePassword(user.password);
+        user.password = hashedPassword!;
+        await User.create(user);
+    });
+
+    describe("성공시", () => {
+        const user = { email: "test@test.com", password: "test1234" };
+        it("token을 반환한다", done => {
+            request(app)
+                .post(`/users/login`)
+                .send(user)
+                .end((err, res) => {
+                    res.body.data.should.be.instanceOf(String);
+                });
+            done();
+        });
+    });
+
+    after(async () => {
+        return await User.deleteMany({});
+    });
+});
+
+describe.only("GET /users/me", () => {
+    const user = {
+        name: "alice",
+        email: "test@test.com",
+        password: "test1234"
+    };
+    let token = "";
+
+    before(async () => {
+        const hashedPassword = await savePassword(user.password);
+        user.password = hashedPassword!;
+        await User.create(user);
+
+        request(app)
+            .post("/users/login")
+            .send(user)
+            .end((err, res) => {
+                token = res.body.data;
+            });
+    });
+    describe("성공시", () => {
+        it("로그인된 유저 정보를 가져온다", done => {
+            console.log("token :", token);
+            done();
+        });
+    });
+
     after(async () => {
         return await User.deleteMany({});
     });

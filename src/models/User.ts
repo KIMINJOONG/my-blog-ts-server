@@ -7,7 +7,7 @@ const saltRounds: Number = 10;
 interface User extends mongoose.Document {
     name: string;
     email: string;
-    passwrod: string;
+    password: string;
     lastname: string;
     role: number;
     image: string;

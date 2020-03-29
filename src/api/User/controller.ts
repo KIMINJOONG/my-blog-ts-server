@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../models/User";
 import { responseMessage } from "../../responsesMessage";
+import { createJWT } from "../../utils/jwt";
+import { savePassword, comparePassword } from "../../utils/password";
 
 export default {
     index: async (
@@ -23,6 +25,8 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         try {
+            const savedPassword = await savePassword(req.body.password);
+            req.body.password = savedPassword;
             const user = await User.create(req.body);
             return res.json(
                 responseMessage({ success: true, message: "" }, user)
@@ -101,5 +105,46 @@ export default {
             error.status = 404;
             return next(error);
         }
-    }
+    },
+    login: async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void | Response> => {
+        const {
+            body: { email, password }
+        } = req;
+        try {
+            const user: User | null = await User.findOne({ email });
+            if (!user) {
+                const error = {
+                    status: -1,
+                    data: null,
+                    message: ""
+                };
+                error.status = 404;
+                error.message = "존재하지 않는 유저입니다.";
+                return next(error);
+            }
+
+            const isLoggedIn = await comparePassword(password, user.password);
+            if (isLoggedIn === false) {
+                const error = {
+                    status: -1,
+                    data: null,
+                    message: ""
+                };
+                error.status = 404;
+                error.message = "패스워드가 일치하지 않습니다.";
+                return next(error);
+            }
+            const token = createJWT(user.id);
+            return res.json(
+                responseMessage({ success: true, message: "" }, token)
+            );
+        } catch (error) {
+            next(error);
+        }
+    },
+    me: (req: Request, res: Response, next: NextFunction) => {}
 };
