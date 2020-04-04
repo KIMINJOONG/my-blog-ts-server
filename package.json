@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha --require ts-node/register './src/api/**/user.spec.ts' --timeout 10000",
+        "test": "mocha --require ts-node/register './src/api/**/board.spec.ts' --timeout 10000",
         "start": "node dist/app.js",
         "dev": "nodemon src/app.ts",
         "build": "npx tsc -p ."

@@ -3,6 +3,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import users from "./api/User";
 import boards from "./api/Board";
+import hashtags from "./api/Hashtag";
 import { responseMessage } from "./responsesMessage";
 import User from "./models/User";
 
@@ -44,6 +45,7 @@ mongoose
 
 app.use("/users", users);
 app.use("/boards", boards);
+app.use("/hashtags", hashtags);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {

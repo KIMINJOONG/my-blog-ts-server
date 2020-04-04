@@ -70,14 +70,14 @@ describe("GET boards/:id는", () => {
     });
 });
 
-describe("POST boards는", () => {
+describe.only("POST boards는", () => {
     before(async () => {
         return await Board.remove({});
     });
 
     describe("성공시", () => {
         let title: string = "제목333";
-        let content: string = "내용ㅇ용용";
+        let content: string = "내용ㅇ용용 #김인중 #개발";
         let category: number = 12;
         let body: any;
         before(done => {
@@ -143,7 +143,7 @@ describe("PUT boards/:id 는 ", () => {
     });
 });
 
-describe.only("DELETE /boards/:id는", () => {
+describe("DELETE /boards/:id는", () => {
     const boards = [
         { title: "제목1", content: "내용1", hashtags: ["#bboy", "#break"] },
         { title: "제목2", content: "내용2", category: ["#bboy", "#break"] },

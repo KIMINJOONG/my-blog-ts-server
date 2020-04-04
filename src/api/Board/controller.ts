@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { responseMessage } from "../../responsesMessage";
 import Board from "../../models/Board";
+import Hashtag from "../../models/Hashtag";
 export default {
     index: async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -18,7 +19,20 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         try {
+            const hashtags = req.body.content.match(/#[^\s]+/g);
             const board = await Board.create(req.body);
+            if (hashtags) {
+                await Promise.all(
+                    hashtags.map(async (tag: string) => {
+                        const newHashtags = await Hashtag.create({
+                            tag: tag.slice(1).toLowerCase()
+                        });
+                        board.hashtags.push(newHashtags);
+                        return;
+                    })
+                );
+            }
+            await board.save();
             return res.json(
                 responseMessage({ success: true, message: "" }, board)
             );
