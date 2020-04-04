@@ -145,9 +145,9 @@ describe("PUT boards/:id 는 ", () => {
 
 describe.only("DELETE /boards/:id는", () => {
     const boards = [
-        { title: "제목1", content: "내용1", category: 1 },
-        { title: "제목2", content: "내용2", category: 2 },
-        { title: "제목3", content: "내용3", category: 3 }
+        { title: "제목1", content: "내용1", hashtags: ["#bboy", "#break"] },
+        { title: "제목2", content: "내용2", category: ["#bboy", "#break"] },
+        { title: "제목3", content: "내용3", category: ["#bboy", "#break"] }
     ];
 
     let boardId: string = "";

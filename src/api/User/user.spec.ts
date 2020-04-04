@@ -223,18 +223,30 @@ describe.only("GET /users/me", () => {
         const hashedPassword = await savePassword(user.password);
         user.password = hashedPassword!;
         await User.create(user);
-
-        request(app)
-            .post("/users/login")
-            .send(user)
-            .end((err, res) => {
-                token = res.body.data;
-            });
     });
-    describe("성공시", () => {
-        it("로그인된 유저 정보를 가져온다", done => {
-            console.log("token :", token);
-            done();
+    describe("로그인 시도", () => {
+        const loginUser = {
+            email: "test@test.com",
+            password: "test1234"
+        };
+
+        it("성공시 토큰 발급 후 유저 가져오기", done => {
+            request(app)
+                .post("/users/login")
+                .send(loginUser)
+                .end((err, res) => {
+                    token = res.body.data;
+                    request(app)
+                        .get("/users/me")
+                        .set("Authorization", token)
+                        .end((err, res) => {
+                            res.body.data.should.have.property(
+                                "email",
+                                loginUser.email
+                            );
+                            done();
+                        });
+                });
         });
     });
 

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import users from "./api/User";
 import boards from "./api/Board";
 import { responseMessage } from "./responsesMessage";
+import User from "./models/User";
 
 const app = express();
 
@@ -22,6 +23,14 @@ export interface Err extends Error {
 //     err.status = 404;
 //     next(err);
 // });
+
+declare global {
+    namespace Express {
+        interface Request {
+            user: User;
+        }
+    }
+}
 
 mongoose
     .connect("mongodb://localhost:27017/my-blog-ts", {

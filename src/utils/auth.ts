@@ -7,7 +7,7 @@ export const isLoggedIn = async (
     res: Response,
     next: NextFunction
 ) => {
-    const token = req.headers["authentication"];
+    const token = req.headers["authorization"];
     if (!token) {
         const error = {
             status: -1,
@@ -30,6 +30,7 @@ export const isLoggedIn = async (
         return next(error);
     }
     // delete user.password;
+    user.password = "";
     req.user = user;
     next();
 };

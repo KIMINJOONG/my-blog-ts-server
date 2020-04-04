@@ -146,5 +146,8 @@ export default {
             next(error);
         }
     },
-    me: (req: Request, res: Response, next: NextFunction) => {}
+    me: (req: Request, res: Response, next: NextFunction) => {
+        const user = req.user;
+        return res.json(responseMessage({ success: true, message: "" }, user));
+    }
 };

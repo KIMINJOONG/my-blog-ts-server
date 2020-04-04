@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface Board extends mongoose.Document {
     title: string;
     content: string;
-    category: number;
+    hashtags: Array<Object>;
 }
 const BoardSchema = new mongoose.Schema({
     title: {
@@ -12,7 +12,6 @@ const BoardSchema = new mongoose.Schema({
     content: {
         type: String
     },
-    category: Number,
     hashtags: [
         {
             type: mongoose.Schema.Types.ObjectId,
