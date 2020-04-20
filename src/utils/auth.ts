@@ -7,12 +7,14 @@ export const isLoggedIn = async (
     res: Response,
     next: NextFunction
 ) => {
-    const token = req.headers["authorization"];
+    let token = req.headers["authorization"];
+    token = token?.split("=")[1];
+
     if (!token) {
         const error = {
             status: -1,
             data: null,
-            message: ""
+            message: "",
         };
         error.status = 404;
         error.message = "토큰이 존재하지않습니다.";
@@ -23,7 +25,7 @@ export const isLoggedIn = async (
         const error = {
             status: -1,
             data: null,
-            message: ""
+            message: "",
         };
         error.status = 404;
         error.message = "잘못된 토큰입니다.";

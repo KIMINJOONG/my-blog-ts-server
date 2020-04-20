@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { responseMessage } from "../../responsesMessage";
 import Board from "../../models/Board";
-import Hashtag from "../../models/Hashtag";
+
 export default {
     index: async (req: Request, res: Response, next: NextFunction) => {
         try {

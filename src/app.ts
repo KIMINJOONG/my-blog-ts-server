@@ -6,9 +6,16 @@ import boards from "./api/Board";
 import hashtags from "./api/Hashtag";
 import { responseMessage } from "./responsesMessage";
 import User from "./models/User";
+import cors from "cors";
 
 const app = express();
 
+app.use(
+    cors({
+        origin: true,
+        credentials: true,
+    })
+);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,10 +45,10 @@ mongoose
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
-        useFindAndModify: false
+        useFindAndModify: false,
     })
     .then(() => console.log("mongo db success"))
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 
 app.use("/users", users);
 app.use("/boards", boards);
@@ -56,7 +63,7 @@ app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
         responseMessage(
             {
                 success: false,
-                message: err.message
+                message: err.message,
             },
             err.data
         )
