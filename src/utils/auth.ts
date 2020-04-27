@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { decodeJWT } from "./jwt";
-import User from "../models/User";
+import User from "../config/models/User";
 
 export const isLoggedIn = async (
     req: Request,
@@ -16,7 +16,7 @@ export const isLoggedIn = async (
             data: null,
             message: "",
         };
-        error.status = 404;
+        error.status = 200;
         error.message = "토큰이 존재하지않습니다.";
         return next(error);
     }

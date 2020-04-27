@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User from "../config/models/User";
 export const createJWT = (id: string): string => {
     const token = jwt.sign(
         { id },
@@ -17,7 +17,7 @@ export const decodeJWT = async (token: string): Promise<User | undefined> => {
 
         const { id } = decoded;
         if (id) {
-            const user: User | null = await User.findById({ _id: id });
+            const user: User | null = await User.findOne({ where: { id } });
             if (!user) {
                 return undefined;
             }

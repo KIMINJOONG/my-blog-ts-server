@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { responseMessage } from "../../responsesMessage";
-import Board from "../../models/Board";
-import Hashtag from "../../models/Hashtag";
+import Board from "../../config/models/Board";
+import Hashtag from "../../config/models/Hashtag";
 export default {
     index: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const boards: Board[] = await Board.find({});
+            const boards: Board[] = await Board.findAll();
             return res.json(
                 responseMessage({ success: true, message: "" }, boards)
             );
@@ -25,7 +25,7 @@ export default {
                 await Promise.all(
                     hashtags.map(async (tag: string) => {
                         const newHashtags = await Hashtag.create({
-                            tag: tag.slice(1).toLowerCase()
+                            tag: tag.slice(1).toLowerCase(),
                         });
                         board.hashtags.push(newHashtags);
                         return;
@@ -46,32 +46,33 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
-        const { id } = req.params;
-        if (id) {
-            try {
-                const board = await Board.find({ _id: id });
-                if (!board) {
-                    let error = {
-                        status: -1,
-                        data: null,
-                        message: ""
-                    };
-                    error.status = 404;
-                    error.message = "존재하지 않는 게시글입니다.";
-                    return next(error);
-                }
-                return res.json(
-                    responseMessage({ success: true, message: "" }, board)
-                );
-            } catch (error) {
-                next(error);
+        const {
+            params: { id },
+        } = req;
+        let parsedInt: number = parseInt(id);
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        if (Number.isNaN(parsedInt)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다";
+            return next(error);
+        }
+        try {
+            const board = await Board.findOne({ where: { id: parsedInt } });
+            if (!board) {
+                error.status = 404;
+                error.message = "존재하지 않는 게시글입니다.";
+                return next(error);
             }
-        } else {
-            let error = {
-                status: -1,
-                data: null,
-                message: "잘못된 요청입니다."
-            };
+            return res.json(
+                responseMessage({ success: true, message: "" }, board)
+            );
+        } catch (error) {
             next(error);
         }
     },
@@ -82,23 +83,32 @@ export default {
     ): Promise<void | Response> => {
         const { id } = req.params;
         const { title } = req.body;
+        const parsedId: number = parseInt(id);
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        if (Number.isNaN(parsedId)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다";
+            return next(error);
+        }
+
         try {
-            const board = await Board.findOneAndUpdate(
-                { _id: id },
-                { title },
-                { new: true }
-            );
+            const board: Board = await Board.findOne({
+                where: { id: parsedId },
+            });
             if (!board) {
-                const error = {
-                    status: -1,
-                    data: null,
-                    message: ""
-                };
                 error.status = 404;
-                error.message = "존재하지 않는 유저입니다.";
+                error.message = "존재하지않는 게시글입니다.";
                 return next(error);
             }
 
+            await board.update({ title });
+            await board.save();
             return res.json(
                 responseMessage({ success: true, message: "" }, board)
             );
@@ -112,13 +122,31 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
-        const { id } = req.params;
+        const {
+            params: { id },
+        } = req;
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        const parsedId: number = parseInt(id);
+        if (Number.isNaN(parsedId)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다.";
+            return next(error);
+        }
         try {
-            await Board.deleteOne({ _id: id });
+            const board: Board = await Board.findOne({
+                where: { id: parsedId },
+            });
+            await board.destroy();
             return res.json(responseMessage({ success: true, message: "" }));
         } catch (error) {
             error.status = 404;
             return next(error);
         }
-    }
+    },
 };

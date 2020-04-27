@@ -1,12 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
-import mongoose from "mongoose";
 import users from "./api/User";
 import boards from "./api/Board";
 import hashtags from "./api/Hashtag";
 import { responseMessage } from "./responsesMessage";
-import User from "./models/User";
+import User from "./config/models/User";
 import cors from "cors";
+import { sequelize } from "./config/config";
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.use(
     })
 );
 app.use(morgan("dev"));
+sequelize.sync({ force: true });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,16 +40,6 @@ declare global {
         }
     }
 }
-
-mongoose
-    .connect("mongodb://localhost:27017/my-blog-ts", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    })
-    .then(() => console.log("mongo db success"))
-    .catch((err) => console.log(err));
 
 app.use("/users", users);
 app.use("/boards", boards);

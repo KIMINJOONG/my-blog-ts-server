@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../../models/User";
+import User from "../../config/models/User";
 import { responseMessage } from "../../responsesMessage";
 import { createJWT } from "../../utils/jwt";
-import { savePassword, comparePassword } from "../../utils/password";
 
 export default {
     index: async (
@@ -11,7 +10,7 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         try {
-            const users: User[] = await User.find({});
+            const users: User[] = await User.findAll();
             return res.json(
                 responseMessage({ success: true, message: "" }, users)
             );
@@ -24,14 +23,16 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
+        const { email, name, password } = req.body;
         try {
-            const savedPassword = await savePassword(req.body.password);
-            req.body.password = savedPassword;
-            const user = await User.create(req.body);
+            let user = await User.create({ email, name, password });
+            await user.save();
+            console.log("user : ", user);
             return res.json(
                 responseMessage({ success: true, message: "" }, user)
             );
         } catch (error) {
+            console.log(error);
             return next(error);
         }
     },
@@ -40,15 +41,26 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
-        const { id } = req.params;
+        const {
+            params: { id },
+        } = req;
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        let parsedId = parseInt(id);
+
+        if (Number.isNaN(parsedId)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다.";
+            return next(error);
+        }
         try {
-            const user = await User.findOne({ _id: id });
+            const user = await User.findOne({ where: { id: parsedId } });
             if (!user) {
-                const error = {
-                    status: -1,
-                    data: null,
-                    message: ""
-                };
                 error.status = 404;
                 error.message = "존재하지 않는 유저입니다.";
                 return next(error);
@@ -66,24 +78,35 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
-        const { id } = req.params;
-        const { name } = req.body;
+        const {
+            params: { id },
+            body: { name },
+        } = req;
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        let parsedId = parseInt(id);
+
+        if (Number.isNaN(parsedId)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다.";
+            return next(error);
+        }
         try {
-            const user = await User.findOneAndUpdate(
-                { _id: id },
-                { name },
-                { new: true }
-            );
+            let user = await User.findOne({ where: { id } });
             if (!user) {
-                const error = {
-                    status: -1,
-                    data: null,
-                    message: ""
-                };
                 error.status = 404;
                 error.message = "존재하지 않는 유저입니다.";
                 return next(error);
             }
+
+            user = await user.update({ name }, { where: { id } });
+            await user.save();
+
             return res.json(
                 responseMessage({ success: true, message: "" }, user)
             );
@@ -97,9 +120,31 @@ export default {
         res: Response,
         next: NextFunction
     ): Promise<void | Response> => {
-        const { id } = req.params;
+        const {
+            params: { id },
+        } = req;
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
+
+        let parsedId = parseInt(id);
+
+        if (Number.isNaN(parsedId)) {
+            error.status = 404;
+            error.message = "잘못된 요청입니다.";
+            return next(error);
+        }
         try {
-            await User.deleteOne({ _id: id });
+            const user = await User.findOne({ where: { id: parsedId } });
+            if (!user) {
+                error.status = 404;
+                error.message = "존재하지 않는 유저입니다.";
+                return next(error);
+            }
+            await user.destroy();
             return res.json(responseMessage({ success: true, message: "" }));
         } catch (error) {
             error.status = 404;
@@ -112,28 +157,24 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         const {
-            body: { email, password }
+            body: { email, password },
         } = req;
+
+        let error = {
+            status: -1,
+            data: null,
+            message: "",
+        };
         try {
-            const user: User | null = await User.findOne({ email });
+            const user = await User.findOne({ where: { email } });
             if (!user) {
-                const error = {
-                    status: -1,
-                    data: null,
-                    message: ""
-                };
                 error.status = 404;
                 error.message = "존재하지 않는 유저입니다.";
                 return next(error);
             }
 
-            const isLoggedIn = await comparePassword(password, user.password);
+            const isLoggedIn = await user.comparePassword(password);
             if (isLoggedIn === false) {
-                const error = {
-                    status: -1,
-                    data: null,
-                    message: ""
-                };
                 error.status = 404;
                 error.message = "패스워드가 일치하지 않습니다.";
                 return next(error);
@@ -149,5 +190,5 @@ export default {
     me: (req: Request, res: Response, next: NextFunction) => {
         const user = req.user;
         return res.json(responseMessage({ success: true, message: "" }, user));
-    }
+    },
 };
