@@ -54,7 +54,7 @@ export default {
         let parsedId = parseInt(id);
 
         if (Number.isNaN(parsedId)) {
-            error.status = 404;
+            error.status = 400;
             error.message = "잘못된 요청입니다.";
             return next(error);
         }
@@ -92,7 +92,7 @@ export default {
         let parsedId = parseInt(id);
 
         if (Number.isNaN(parsedId)) {
-            error.status = 404;
+            error.status = 400;
             error.message = "잘못된 요청입니다.";
             return next(error);
         }
@@ -133,7 +133,7 @@ export default {
         let parsedId = parseInt(id);
 
         if (Number.isNaN(parsedId)) {
-            error.status = 404;
+            error.status = 400;
             error.message = "잘못된 요청입니다.";
             return next(error);
         }
@@ -166,7 +166,7 @@ export default {
             message: "",
         };
         try {
-            const user = await User.findOne({ where: { email } });
+            const user: User = await User.findOne({ where: { email } });
             if (!user) {
                 error.status = 404;
                 error.message = "존재하지 않는 유저입니다.";
@@ -174,6 +174,7 @@ export default {
             }
 
             const isLoggedIn = await user.comparePassword(password);
+
             if (isLoggedIn === false) {
                 error.status = 404;
                 error.message = "패스워드가 일치하지 않습니다.";

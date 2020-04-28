@@ -63,7 +63,7 @@ describe("GET /users/:id 는", () => {
     });
 });
 
-describe.only("POST users는", () => {
+describe("POST users는", () => {
     before(() => {
         return sequelize.sync({ force: true });
     });
@@ -166,77 +166,81 @@ describe("DELETE /users/:id는", () => {
     });
 });
 
-// describe("POST /users/login은", () => {
-//     const user = {
-//         name: "alice",
-//         email: "test@test.com",
-//         password: "test1234",
-//     };
+describe("POST /users/login은", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-//     before(async () => {
-//         const hashedPassword = await savePassword(user.password);
-//         user.password = hashedPassword!;
-//         await User.create(user);
-//     });
+    before(async () => {
+        const user = [
+            {
+                name: "alice",
+                email: "test@test.com",
+                password: "test1234",
+            },
+        ];
+        const hashedPassword = await savePassword(user[0].password);
+        user[0].password = hashedPassword!;
+        await User.bulkCreate(user);
+    });
 
-//     describe("성공시", () => {
-//         const user = { email: "test@test.com", password: "test1234" };
-//         it("token을 반환한다", (done) => {
-//             request(app)
-//                 .post(`/users/login`)
-//                 .send(user)
-//                 .end((err, res) => {
-//                     res.body.data.should.be.instanceOf(String);
-//                 });
-//             done();
-//         });
-//     });
+    describe("성공시", () => {
+        const user = { email: "test@test.com", password: "test1234" };
+        it("token을 반환한다", (done) => {
+            request(app)
+                .post(`/users/login`)
+                .send(user)
+                .end((err, res) => {
+                    res.body.data.should.be.instanceOf(String);
+                });
+            done();
+        });
+    });
+});
 
-//     after(async () => {
-//         return await User.deleteMany({});
-//     });
-// });
+describe.only("GET /users/me", () => {
+    const user = [
+        {
+            name: "alice",
+            email: "test@test.com",
+            password: "test1234",
+        },
+    ];
+    let token = "";
 
-// describe.only("GET /users/me", () => {
-//     const user = {
-//         name: "alice",
-//         email: "test@test.com",
-//         password: "test1234",
-//     };
-//     let token = "";
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-//     before(async () => {
-//         const hashedPassword = await savePassword(user.password);
-//         user.password = hashedPassword!;
-//         await User.create(user);
-//     });
-//     describe("로그인 시도", () => {
-//         const loginUser = {
-//             email: "test@test.com",
-//             password: "test1234",
-//         };
+    before(async () => {
+        const hashedPassword = await savePassword(user[0].password);
+        user[0].password = hashedPassword!;
+        await User.bulkCreate(user);
+    });
+    describe("로그인 시도", () => {
+        const loginUser = {
+            email: "test@test.com",
+            password: "test1234",
+        };
 
-//         it("성공시 토큰 발급 후 유저 가져오기", (done) => {
-//             request(app)
-//                 .post("/users/login")
-//                 .send(loginUser)
-//                 .end((err, res) => {
-//                     token = res.body.data;
-//                     request(app)
-//                         .get("/users/me")
-//                         .set("Authorization", token)
-//                         .end((err, res) => {
-//                             res.body.data.should.have.property(
-//                                 "email",
-//                                 loginUser.email
-//                             );
-//                             done();
-//                         });
-//                 });
-//         });
-//     });
-
-//     after(async () => {
-//         return await User.deleteMany({});
-//     });
-// });
+        it("성공시 토큰 발급 후 유저 가져오기", (done) => {
+            request(app)
+                .post("/users/login")
+                .send(loginUser)
+                .end((err, res) => {
+                    token = res.body.data;
+                    request(app)
+                        .get("/users/me")
+                        .set("Authorization", token)
+                        .end((err, res) => {
+                            console.log("aaaaa : ", res);
+                            res.body.data.should.have.property(
+                                "email",
+                                loginUser.email
+                            );
+                            done();
+                        });
+                });
+        });
+    });
+});
