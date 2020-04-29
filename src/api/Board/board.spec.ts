@@ -1,168 +1,170 @@
-// import { expect } from "chai";
-// import request from "supertest";
-// import app from "../../app";
-// import should from "should";
-// import Board from "../../config/models/Board";
+import { expect } from "chai";
+import request from "supertest";
+import app from "../../app";
+import should from "should";
+import Board from "../../config/models/Board";
+import { sequelize } from "../../config/config";
+import User from "../../config/models/User";
 
-// describe("GET boards는", () => {
-//     const boards = [
-//         { title: "제목1", content: "내용1", category: 1 },
-//         { title: "제목2", content: "내용2", category: 2 },
-//         { title: "제목3", content: "내용3", category: 3 },
-//     ];
+describe("GET boards는", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-//     before(async () => {
-//         await Board.create(boards);
-//     });
-//     describe("성공시", () => {
-//         it("유저 객체를 담은 배열로 응답한다.", (done) => {
-//             request(app)
-//                 .get("/boards")
-//                 .end((err, res) => {
-//                     should(res.body.data).be.instanceOf(Array);
-//                     done();
-//                 });
-//         });
-//     });
+    before(() => {
+        const boards = [
+            { title: "제목1", content: "내용1" },
+            { title: "제목2", content: "내용2" },
+            { title: "제목3", content: "내용3" },
+        ];
+        return Board.bulkCreate(boards);
+    });
+    describe("성공시", () => {
+        it("유저 객체를 담은 배열로 응답한다.", (done) => {
+            request(app)
+                .get("/boards")
+                .end((err, res) => {
+                    should(res.body.data).be.instanceOf(Array);
+                    done();
+                });
+        });
+    });
+});
 
-//     after(async () => {
-//         await Board.de({});
-//     });
-// });
+describe.only("GET boards/:id는", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-// describe("GET boards/:id는", () => {
-//     const boards = [
-//         { title: "제목1", content: "내용1", category: 1 },
-//         { title: "제목2", content: "내용2", category: 2 },
-//         { title: "제목3", content: "내용3", category: 3 },
-//     ];
+    before(() => {
+        const boards = [
+            { title: "제목1", content: "내용1" },
+            { title: "제목2", content: "내용2" },
+            { title: "제목3", content: "내용3" },
+        ];
+        return Board.bulkCreate(boards);
+    });
 
-//     let boardId: string = "";
+    describe("성공시", () => {
+        it(`id가 1인 객체를 반환한다.`, (done) => {
+            request(app)
+                .get(`/boards/1`)
+                .end((err, res) => {
+                    should(res.body.data).have.property("id", 1);
+                    done();
+                });
+        });
+    });
 
-//     before(async () => {
-//         await Board.create(boards);
-//         const board = await Board.findOne({ where: { name: "제목1" } });
-//         if (board) boardId = board.id;
-//     });
+    describe("실패시", () => {
+        it("게시글 id값이 숫자가 아닐경우 404를 리턴", (done) => {
+            request(app).put("/boards/one").expect(404).end(done);
+        });
 
-//     describe("성공시", () => {
-//         it(`id가 ${boardId}인 객체를 반환한다.`, (done) => {
-//             request(app)
-//                 .get(`/boards/${boardId}`)
-//                 .end((err, res) => {
-//                     should(res.body.data).have.property("_id", boardId);
-//                     done();
-//                 });
-//         });
-//     });
+        it("id로 게시글을 찾을 수 없는 경우 400로 응답한다.", (done) => {
+            request(app).get("/boards/999").expect(400).end(done);
+        });
+    });
+});
 
-//     describe("실패시", () => {
-//         it("id로 게시글을 찾을 수 없는 경우 404로 응답한다.", (done) => {
-//             request(app).get("/boards/999").expect(404).end(done);
-//         });
-//     });
+describe("POST boards는", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
+    describe("성공시", () => {
+        before(() => {
+            const users = [
+                { userId: "test", name: "alice", password: "test" },
+                { userId: "hehe", name: "bek", password: "test" },
+                { userId: "huhu", name: "chris", password: "test" },
+            ];
+            return User.bulkCreate(users);
+        });
+        let body: any;
+        let board = {
+            title: "제목",
+            content: "내용",
+        };
 
-//     after(async () => {
-//         await Board.deleteMany({});
-//     });
-// });
+        it("생성된 보드객체를 반환함", (done) => {
+            request(app)
+                .post("/boards")
+                .send(board)
+                .expect(201)
+                .end((err, res) => {
+                    should(res.body.data).have.property("id");
+                    done();
+                });
+        });
+    });
+});
 
-// describe.only("POST boards는", () => {
-//     before(async () => {
-//         return await Board.remove({});
-//     });
+describe("PUT boards/:id 는 ", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-//     describe("성공시", () => {
-//         let title: string = "제목333";
-//         let content: string = "내용ㅇ용용 #김인중 #개발";
-//         let category: number = 12;
-//         let body: any;
-//         before((done) => {
-//             request(app)
-//                 .post("/boards")
-//                 .send({ title, content, category })
-//                 .expect(201)
-//                 .end((err, res) => {
-//                     body = res.body;
-//                     done();
-//                 });
-//         });
+    before(() => {
+        const boards = [
+            { title: "제목1", content: "내용1" },
+            { title: "제목2", content: "내용2" },
+            { title: "제목3", content: "내용3" },
+        ];
+        return Board.bulkCreate(boards);
+    });
 
-//         it("생성된 유저 객체를 반환한다.", (done) => {
-//             body.data.should.have.property("_id");
-//             done();
-//         });
+    describe("성공시", () => {
+        const title: string = "제목 수정";
 
-//         after(async () => {
-//             return await Board.deleteMany({});
-//         });
-//     });
-// });
+        it("수정한 게시글 객체를 반환", (done) => {
+            const title = "update";
+            request(app)
+                .put("/boards/1")
+                .send({ title })
+                .end((err, res) => {
+                    should(res.body.data).have.property("title", title);
+                    done();
+                });
+        });
+    });
 
-// describe("PUT boards/:id 는 ", () => {
-//     const boards = [
-//         { title: "제목1", content: "내용1", category: 1 },
-//         { title: "제목2", content: "내용2", category: 2 },
-//         { title: "제목3", content: "내용3", category: 3 },
-//     ];
+    describe("실패시", () => {
+        it("게시글 id값이 숫자가 아닐경우 404를 리턴", (done) => {
+            request(app).put("/boards/one").expect(404).end(done);
+        });
 
-//     let boardId: string = "";
+        it("존재하지 않는 게시글일 경우 400을 리턴", (done) => {
+            request(app).put("/boards/999").expect(400).end(done);
+        });
+    });
+});
 
-//     before(async () => {
-//         await Board.create(boards);
-//         const board = await Board.findOne({ title: "제목1" });
-//         if (board) boardId = board.id;
-//     });
-//     describe("성공시", () => {
-//         const title = "제목1 수정";
-//         it("변경된 유저 객체를 반환한다.", (done) => {
-//             request(app)
-//                 .put(`/boards/${boardId}`)
-//                 .send({ title })
-//                 .end((err, res) => {
-//                     res.body.data.should.have.property("title", title);
-//                 });
-//             done();
-//         });
-//     });
+describe("DELETE /boards/:id는", () => {
+    before(() => {
+        return sequelize.sync({ force: true });
+    });
 
-//     describe("실패시", () => {
-//         it("존재하지 않는 유저일 경우 404로 응답한다", (done) => {
-//             request(app).put("/boards/12312").expect(404).end(done);
-//         });
-//     });
+    before(() => {
+        const boards = [
+            { title: "제목1", content: "내용1" },
+            { title: "제목2", content: "내용2" },
+            { title: "제목3", content: "내용3" },
+        ];
+        return Board.bulkCreate(boards);
+    });
+    describe("성공시", () => {
+        it("200을 응답한다", (done) => {
+            request(app).delete(`/boards/1`).expect(200).end(done);
+        });
+    });
 
-//     after(async () => {
-//         return await Board.deleteMany({});
-//     });
-// });
+    describe("실패시", () => {
+        it("게시글 id값이 숫자가 아닐경우 404를 리턴", (done) => {
+            request(app).put("/boards/one").expect(404).end(done);
+        });
 
-// describe("DELETE /boards/:id는", () => {
-//     const boards = [
-//         { title: "제목1", content: "내용1", hashtags: ["#bboy", "#break"] },
-//         { title: "제목2", content: "내용2", category: ["#bboy", "#break"] },
-//         { title: "제목3", content: "내용3", category: ["#bboy", "#break"] },
-//     ];
-
-//     let boardId: string = "";
-
-//     before(async () => {
-//         await Board.create(boards);
-//         const board = await Board.findOne({ title: "제목1" });
-//         if (board) boardId = board.id;
-//     });
-//     describe("성공시", () => {
-//         it("200을 응답한다", (done) => {
-//             request(app).delete(`/boards/${boardId}`).expect(200).end(done);
-//         });
-//     });
-
-//     describe("실패시", () => {
-//         it("없는 유저일경우 404를 반환한다.", (done) => {
-//             request(app).delete(`/boards/23213a`).expect(404).end(done);
-//         });
-//     });
-//     after(async () => {
-//         return await Board.deleteMany({});
-//     });
-// });
+        it("없는 게시글일경우 400을 반환한다.", (done) => {
+            request(app).delete(`/boards/23213a`).expect(400).end(done);
+        });
+    });
+});

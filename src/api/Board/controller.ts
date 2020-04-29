@@ -20,18 +20,21 @@ export default {
     ): Promise<void | Response> => {
         try {
             const hashtags = req.body.content.match(/#[^\s]+/g);
-            const board = await Board.create(req.body);
-            if (hashtags) {
-                await Promise.all(
-                    hashtags.map(async (tag: string) => {
-                        const newHashtags = await Hashtag.create({
-                            tag: tag.slice(1).toLowerCase(),
-                        });
-                        board.hashtags.push(newHashtags);
-                        return;
-                    })
-                );
-            }
+            const board: Board = await Board.create({
+                title: req.body.title,
+                content: req.body.content,
+            });
+            // if (hashtags) {
+            //     await Promise.all(
+            //         hashtags.map(async (tag: string) => {
+            //             const newHashtags = await Hashtag.create({
+            //                 tag: tag.slice(1).toLowerCase(),
+            //             });
+            //             board.hashtags.push(newHashtags);
+            //             return;
+            //         })
+            //     );
+            // }
             await board.save();
             return res.json(
                 responseMessage({ success: true, message: "" }, board)
@@ -65,7 +68,7 @@ export default {
         try {
             const board = await Board.findOne({ where: { id: parsedInt } });
             if (!board) {
-                error.status = 404;
+                error.status = 400;
                 error.message = "존재하지 않는 게시글입니다.";
                 return next(error);
             }
@@ -102,7 +105,7 @@ export default {
                 where: { id: parsedId },
             });
             if (!board) {
-                error.status = 404;
+                error.status = 400;
                 error.message = "존재하지않는 게시글입니다.";
                 return next(error);
             }
@@ -142,6 +145,12 @@ export default {
             const board: Board = await Board.findOne({
                 where: { id: parsedId },
             });
+            if (!board) {
+                error.status = 400;
+                error.message = "존재하지않는 게시글입니다.";
+                return next(error);
+            }
+
             await board.destroy();
             return res.json(responseMessage({ success: true, message: "" }));
         } catch (error) {

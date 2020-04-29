@@ -27,7 +27,6 @@ export default {
         try {
             let user = await User.create({ email, name, password });
             await user.save();
-            console.log("user : ", user);
             return res.json(
                 responseMessage({ success: true, message: "" }, user)
             );
