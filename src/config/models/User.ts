@@ -7,6 +7,7 @@ import {
     BeforeUpdate,
 } from "sequelize-typescript";
 import bcrypt from "bcrypt";
+import Board from "./Board";
 
 const BCRYPT_ROUNDS = 10;
 
@@ -71,3 +72,5 @@ export default class User extends Model<User> {
         return bcrypt.hash(password, BCRYPT_ROUNDS);
     }
 }
+
+User.hasMany(Board, { as: "Boards" });

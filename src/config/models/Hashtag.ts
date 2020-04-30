@@ -1,4 +1,5 @@
 import { Table, Model, Column, DataType } from "sequelize-typescript";
+import Board from "./Board";
 
 @Table({
     charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -11,3 +12,5 @@ export default class Hashtag extends Model<Hashtag> {
     })
     tags?: string;
 }
+
+Hashtag.belongsToMany(Board, { through: "PostHashTag" });

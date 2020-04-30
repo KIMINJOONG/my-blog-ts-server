@@ -1,4 +1,6 @@
 import { Table, Model, Column, DataType } from "sequelize-typescript";
+import User from "./User";
+import Hashtag from "./Hashtag";
 
 @Table({
     charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -16,10 +18,8 @@ export default class Board extends Model<Board> {
         comment: "내용",
     })
     content!: string;
-    // hashtags: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Hashtag",
-    //     },
-    // ],
 }
+
+Board.belongsTo(User); // 테이블에 UserId 컬럼이 생겨요
+// Board.hasMany(Image);
+Board.belongsToMany(Hashtag, { through: "PostHashtag" });
