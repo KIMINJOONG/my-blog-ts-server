@@ -1,4 +1,10 @@
-import { Table, Model, Column, DataType } from "sequelize-typescript";
+import {
+    Table,
+    Model,
+    Column,
+    DataType,
+    BelongsToMany,
+} from "sequelize-typescript";
 import Board from "./Board";
 
 @Table({
@@ -11,6 +17,7 @@ export default class Hashtag extends Model<Hashtag> {
         comment: "해쉬태그",
     })
     tags?: string;
-}
 
-Hashtag.belongsToMany(Board, { through: "PostHashTag" });
+    @BelongsToMany(() => Board, { through: "PostHashTag" })
+    postHashTag?: Board[];
+}

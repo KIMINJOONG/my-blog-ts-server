@@ -1,4 +1,12 @@
-import { Table, Model, Column, DataType } from "sequelize-typescript";
+import {
+    Table,
+    Model,
+    Column,
+    DataType,
+    BelongsTo,
+    BelongsToMany,
+    ForeignKey,
+} from "sequelize-typescript";
 import User from "./User";
 import Hashtag from "./Hashtag";
 
@@ -18,8 +26,14 @@ export default class Board extends Model<Board> {
         comment: "내용",
     })
     content!: string;
-}
 
-Board.belongsTo(User); // 테이블에 UserId 컬럼이 생겨요
-// Board.hasMany(Image);
-Board.belongsToMany(Hashtag, { through: "PostHashtag" });
+    @ForeignKey(() => User)
+    @Column
+    userId!: number;
+
+    @BelongsTo(() => User)
+    author!: User;
+
+    @BelongsToMany(() => Hashtag, { through: "PostHashtag" })
+    postHashtag?: Hashtag[];
+}

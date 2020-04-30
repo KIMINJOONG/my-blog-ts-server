@@ -5,6 +5,7 @@ import {
     DataType,
     BeforeCreate,
     BeforeUpdate,
+    HasMany,
 } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 import Board from "./Board";
@@ -52,8 +53,8 @@ export default class User extends Model<User> {
     })
     tokenExp?: string;
 
-    // @HasMany(() => Board)
-    // boards?: Board[];
+    @HasMany(() => Board)
+    boards?: Board[];
 
     public comparePassword(password: string = ""): Promise<boolean> {
         return bcrypt.compare(password, this.password);
@@ -72,5 +73,3 @@ export default class User extends Model<User> {
         return bcrypt.hash(password, BCRYPT_ROUNDS);
     }
 }
-
-User.hasMany(Board, { as: "Boards" });
