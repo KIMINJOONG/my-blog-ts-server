@@ -17,7 +17,7 @@ app.use(
     })
 );
 app.use(morgan("dev"));
-sequelize.sync({ force: true });
+sequelize.sync({ force: false });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

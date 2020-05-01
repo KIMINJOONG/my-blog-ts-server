@@ -83,7 +83,7 @@ describe.only("POST boards는", () => {
         let body: any;
         let board = {
             title: "제목",
-            content: "내용 #비보이 #춤",
+            content: "내용 #bboy",
         };
 
         it("생성된 보드객체를 반환함", (done) => {
