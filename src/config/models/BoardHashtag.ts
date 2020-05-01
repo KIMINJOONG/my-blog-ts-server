@@ -14,16 +14,10 @@ import Board from "./Board";
 })
 export default class BoardHashtag extends Model<BoardHashtag> {
     @ForeignKey(() => Board)
-    @Column({
-        type: DataType.NUMBER,
-        comment: "게시글 번호",
-    })
+    @Column
     boardId!: number;
 
     @ForeignKey(() => Hashtag)
-    @Column({
-        type: DataType.NUMBER,
-        comment: "해쉬태그 번호",
-    })
+    @Column
     hashtagId!: number;
 }

@@ -24,22 +24,24 @@ export default {
                 title: req.body.title,
                 content: req.body.content,
             });
-            // if (hashtags) {
-            //     await Promise.all(
-            //         hashtags.map(async (tag: string) => {
-            //             const newHashtags = await Hashtag.create({
-            //                 tag: tag.slice(1).toLowerCase(),
-            //             });
-            //             board.hashtags.push(newHashtags);
-            //             return;
-            //         })
-            //     );
-            // }
+
+            if (hashtags) {
+                await Promise.all(
+                    hashtags.map(async (tag: string) => {
+                        const newHashtags: Hashtag = await Hashtag.create({
+                            name: tag.slice(1).toLowerCase(),
+                        });
+                        board.$add("boardHashtag", newHashtags);
+                        return;
+                    })
+                );
+            }
             await board.save();
             return res.json(
                 responseMessage({ success: true, message: "" }, board)
             );
         } catch (error) {
+            console.log("error : ", error);
             return next(error);
         }
     },

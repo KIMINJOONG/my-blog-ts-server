@@ -31,7 +31,7 @@ describe("GET boards는", () => {
     });
 });
 
-describe.only("GET boards/:id는", () => {
+describe("GET boards/:id는", () => {
     before(() => {
         return sequelize.sync({ force: true });
     });
@@ -67,7 +67,7 @@ describe.only("GET boards/:id는", () => {
     });
 });
 
-describe("POST boards는", () => {
+describe.only("POST boards는", () => {
     before(() => {
         return sequelize.sync({ force: true });
     });
@@ -83,7 +83,7 @@ describe("POST boards는", () => {
         let body: any;
         let board = {
             title: "제목",
-            content: "내용",
+            content: "내용 #비보이 #춤",
         };
 
         it("생성된 보드객체를 반환함", (done) => {

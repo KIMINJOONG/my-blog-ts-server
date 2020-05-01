@@ -17,7 +17,7 @@ export default class Hashtag extends Model<Hashtag> {
         type: DataType.STRING,
         comment: "해쉬태그",
     })
-    tags?: string;
+    name?: string;
 
     @BelongsToMany(() => Board, () => BoardHashtag)
     boardHashTag?: Board[];
