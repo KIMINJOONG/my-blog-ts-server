@@ -9,6 +9,7 @@ import {
 } from "sequelize-typescript";
 import User from "./User";
 import Hashtag from "./Hashtag";
+import BoardHashtag from "./BoardHashtag";
 
 @Table({
     charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -34,6 +35,6 @@ export default class Board extends Model<Board> {
     @BelongsTo(() => User)
     author!: User;
 
-    @BelongsToMany(() => Hashtag, { through: "PostHashtag" })
-    postHashtag?: Hashtag[];
+    @BelongsToMany(() => Hashtag, () => BoardHashtag)
+    boardHashtag?: Hashtag[];
 }

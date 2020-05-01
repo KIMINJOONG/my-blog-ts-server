@@ -6,6 +6,7 @@ import {
     BelongsToMany,
 } from "sequelize-typescript";
 import Board from "./Board";
+import BoardHashtag from "./BoardHashtag";
 
 @Table({
     charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -18,6 +19,6 @@ export default class Hashtag extends Model<Hashtag> {
     })
     tags?: string;
 
-    @BelongsToMany(() => Board, { through: "PostHashTag" })
-    postHashTag?: Board[];
+    @BelongsToMany(() => Board, () => BoardHashtag)
+    boardHashTag?: Board[];
 }
