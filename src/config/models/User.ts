@@ -56,20 +56,20 @@ export default class User extends Model<User> {
     @HasMany(() => Board)
     boards?: Board[];
 
-    public comparePassword(password: string = ""): Promise<boolean> {
-        return bcrypt.compare(password, this.password);
-    }
+    // public comparePassword(password: string = ""): Promise<boolean> {
+    //     return bcrypt.compare(password, this.password);
+    // }
 
-    @BeforeCreate
-    @BeforeUpdate
-    static async savePassword(user: User): Promise<void> {
-        if (user.password) {
-            const hashedPassword = await user.hashPassword(user.password);
-            user.password = hashedPassword;
-        }
-    }
+    // @BeforeCreate
+    // @BeforeUpdate
+    // static async savePassword(user: User): Promise<void> {
+    //     if (user.password) {
+    //         const hashedPassword = await user.hashPassword(user.password);
+    //         user.password = hashedPassword;
+    //     }
+    // }
 
-    private hashPassword(password: string): Promise<string> {
-        return bcrypt.hash(password, BCRYPT_ROUNDS);
-    }
+    // private hashPassword(password: string): Promise<string> {
+    //     return bcrypt.hash(password, BCRYPT_ROUNDS);
+    // }
 }

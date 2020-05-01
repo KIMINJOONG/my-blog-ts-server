@@ -1,4 +1,4 @@
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 const BCRYPT_ROUNDS = 10;
 export const savePassword = async (
     password: string

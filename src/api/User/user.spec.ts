@@ -198,7 +198,7 @@ describe("POST /users/login은", () => {
     });
 });
 
-describe.only("GET /users/me", () => {
+describe("GET /users/me", () => {
     const user = [
         {
             name: "alice",
@@ -217,7 +217,7 @@ describe.only("GET /users/me", () => {
         user[0].password = hashedPassword!;
         await User.bulkCreate(user);
     });
-    describe("로그인 시도", () => {
+    describe.only("로그인 시도", () => {
         const loginUser = {
             email: "test@test.com",
             password: "test1234",
@@ -231,9 +231,8 @@ describe.only("GET /users/me", () => {
                     token = res.body.data;
                     request(app)
                         .get("/users/me")
-                        .set("Authorization", token)
+                        .set("Authorization", `token=${token}`)
                         .end((err, res) => {
-                            console.log("aaaaa : ", res);
                             res.body.data.should.have.property(
                                 "email",
                                 loginUser.email

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../../config/models/User";
 import { responseMessage } from "../../responsesMessage";
 import { createJWT } from "../../utils/jwt";
+import { savePassword, comparePassword } from "../../utils/password";
 
 export default {
     index: async (
@@ -25,13 +26,30 @@ export default {
     ): Promise<void | Response> => {
         const { email, name, password } = req.body;
         try {
-            let user = await User.create({ email, name, password });
-            await user.save();
-            return res.json(
-                responseMessage({ success: true, message: "" }, user)
+            let error = {
+                status: -1,
+                data: null,
+                message: "",
+            };
+            const user = await User.findOne({ where: { email } });
+            if (user) {
+                error.status = 400;
+                error.message = "이미 존재하는 유저입니다.";
+                return next(error);
+            }
+            let newUser: User = await User.create({ email, name, password });
+            const hashedPassword: string | undefined = await savePassword(
+                newUser.password
             );
+            if (hashedPassword) {
+                newUser.password = hashedPassword;
+            }
+            await newUser.save();
+
+            return res
+                .status(200)
+                .json(responseMessage({ success: true, message: "" }, user));
         } catch (error) {
-            console.log(error);
             return next(error);
         }
     },
@@ -172,7 +190,7 @@ export default {
                 return next(error);
             }
 
-            const isLoggedIn = await user.comparePassword(password);
+            const isLoggedIn = await comparePassword(password, user.password);
 
             if (isLoggedIn === false) {
                 error.status = 404;
