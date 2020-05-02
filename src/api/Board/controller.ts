@@ -87,7 +87,7 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         const { id } = req.params;
-        const { title } = req.body;
+        const { title, content } = req.body;
         const parsedId: number = parseInt(id);
 
         let error = {
@@ -112,7 +112,7 @@ export default {
                 return next(error);
             }
 
-            await board.update({ title });
+            await board.update({ title, content });
             await board.save();
             return res.json(
                 responseMessage({ success: true, message: "" }, board)
