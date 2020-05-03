@@ -17,6 +17,7 @@ app.use(
         credentials: true,
     })
 );
+app.use("/", express.static("uploads"));
 app.use(morgan("dev"));
 sequelize.sync({ force: false });
 app.use(express.json());
