@@ -21,4 +21,5 @@ const upload = multer({
 });
 
 router.post("/upload", upload.array("files"), imageController.upload);
+router.delete("/:imageSeq", imageController.destroy);
 export default router;

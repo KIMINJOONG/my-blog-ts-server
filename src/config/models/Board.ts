@@ -6,10 +6,12 @@ import {
     BelongsTo,
     BelongsToMany,
     ForeignKey,
+    HasMany,
 } from "sequelize-typescript";
 import User from "./User";
 import Hashtag from "./Hashtag";
 import BoardHashtag from "./BoardHashtag";
+import Image from "./Image";
 
 @Table({
     charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -34,6 +36,9 @@ export default class Board extends Model<Board> {
 
     @BelongsTo(() => User)
     author!: User;
+
+    @HasMany(() => Image)
+    Image!: Image;
 
     @BelongsToMany(() => Hashtag, () => BoardHashtag)
     boardHashtag?: Hashtag[];
