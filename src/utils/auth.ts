@@ -16,7 +16,7 @@ export const isLoggedIn = async (
             data: null,
             message: "",
         };
-        error.status = 200;
+        error.status = 404;
         error.message = "토큰이 존재하지않습니다.";
         return next(error);
     }
