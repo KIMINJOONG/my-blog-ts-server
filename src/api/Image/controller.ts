@@ -4,7 +4,6 @@ import Image from "../../config/models/Image";
 
 export default {
     upload: async (req: any, res: Response, next: NextFunction) => {
-        console.log(req.files);
         return res.json(req.files.map((v: Express.Multer.File) => v.filename));
     },
     destroy: async (req: Request, res: Response, next: NextFunction) => {

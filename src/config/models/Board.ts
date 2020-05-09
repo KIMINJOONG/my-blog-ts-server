@@ -25,7 +25,7 @@ export default class Board extends Model<Board> {
     title!: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.TEXT,
         comment: "내용",
     })
     content!: string;

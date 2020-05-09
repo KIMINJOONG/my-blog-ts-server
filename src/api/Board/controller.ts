@@ -118,6 +118,7 @@ export default {
                 responseMessage({ success: true, message: "" }, board)
             );
         } catch (error) {
+            console.log("error: ", error);
             error.status = 404;
             return next(error);
         }
