@@ -2,10 +2,24 @@ import { Request, Response, NextFunction } from "express";
 import { responseMessage } from "../../responsesMessage";
 import Board from "../../config/models/Board";
 import Hashtag from "../../config/models/Hashtag";
+import { Op } from "sequelize";
 export default {
     index: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const boards: Board[] = await Board.findAll();
+            let boards: Board[];
+            const { title } = req.query;
+            if (title) {
+                boards = await Board.findAll({
+                    where: {
+                        title: {
+                            [Op.like]: "%" + title + "%",
+                        },
+                    },
+                });
+            } else {
+                boards = await Board.findAll();
+            }
+
             return res.json(
                 responseMessage({ success: true, message: "" }, boards)
             );
@@ -103,7 +117,7 @@ export default {
         }
 
         try {
-            const board: Board = await Board.findOne({
+            const board = await Board.findOne({
                 where: { id: parsedId },
             });
             if (!board) {
@@ -145,7 +159,7 @@ export default {
             return next(error);
         }
         try {
-            const board: Board = await Board.findOne({
+            const board = await Board.findOne({
                 where: { id: parsedId },
             });
             if (!board) {

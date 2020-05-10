@@ -25,7 +25,7 @@ export default {
         }
 
         try {
-            const image: Image = await Image.findOne({
+            const image = await Image.findOne({
                 where: { id: parsedId },
             });
             if (!image) {

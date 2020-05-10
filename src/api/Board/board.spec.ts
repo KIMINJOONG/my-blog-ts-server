@@ -13,8 +13,8 @@ describe("GET boards는", () => {
 
     before(() => {
         const boards = [
-            { title: "제목1", content: "내용1" },
-            { title: "제목2", content: "내용2" },
+            { title: "test", content: "내용1" },
+            { title: "test2", content: "내용2" },
             { title: "제목3", content: "내용3" },
         ];
         return Board.bulkCreate(boards);
@@ -24,6 +24,18 @@ describe("GET boards는", () => {
             request(app)
                 .get("/boards")
                 .end((err, res) => {
+                    should(res.body.data).be.instanceOf(Array);
+                    done();
+                });
+        });
+    });
+
+    describe.only("검색일경우", () => {
+        it("검색 조건에 맞는 리스트를 담은 배열로 응답한다", (done) => {
+            request(app)
+                .get("/boards?title=test")
+                .end((err, res) => {
+                    console.log("yaaa : ", res.body.data);
                     should(res.body.data).be.instanceOf(Array);
                     done();
                 });
@@ -67,7 +79,7 @@ describe("GET boards/:id는", () => {
     });
 });
 
-describe.only("POST boards는", () => {
+describe("POST boards는", () => {
     before(() => {
         return sequelize.sync({ force: true });
     });

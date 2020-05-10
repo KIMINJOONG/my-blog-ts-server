@@ -183,7 +183,7 @@ export default {
             message: "",
         };
         try {
-            const user: User = await User.findOne({ where: { email } });
+            const user = await User.findOne({ where: { email } });
             if (!user) {
                 error.status = 404;
                 error.message = "존재하지 않는 유저입니다.";
