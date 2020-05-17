@@ -3,6 +3,7 @@ import { responseMessage } from "../../responsesMessage";
 import Board from "../../config/models/Board";
 import Hashtag from "../../config/models/Hashtag";
 import { Op } from "sequelize";
+import { checkImage } from "../../utils/file";
 export default {
     index: async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -34,26 +35,28 @@ export default {
     ): Promise<void | Response> => {
         try {
             const hashtags = req.body.content.match(/#[^\s]+/g);
-            const board: Board = await Board.create({
-                title: req.body.title,
-                content: req.body.content,
-            });
+            console.log("들어옴");
+            checkImage(req.body.content);
+            // const board: Board = await Board.create({
+            //     title: req.body.title,
+            //     content: req.body.content,
+            // });
 
-            if (hashtags) {
-                await Promise.all(
-                    hashtags.map(async (tag: string) => {
-                        const newHashtags: Hashtag = await Hashtag.create({
-                            name: tag.slice(1).toLowerCase(),
-                        });
-                        board.$add("boardHashtag", newHashtags);
-                        return;
-                    })
-                );
-            }
-            await board.save();
-            return res.json(
-                responseMessage({ success: true, message: "" }, board)
-            );
+            // if (hashtags) {
+            //     await Promise.all(
+            //         hashtags.map(async (tag: string) => {
+            //             const newHashtags: Hashtag = await Hashtag.create({
+            //                 name: tag.slice(1).toLowerCase(),
+            //             });
+            //             board.$add("boardHashtag", newHashtags);
+            //             return;
+            //         })
+            //     );
+            // }
+            // await board.save();
+            // return res.json(
+            //     responseMessage({ success: true, message: "" }, board)
+            // );
         } catch (error) {
             console.log("error : ", error);
             return next(error);
