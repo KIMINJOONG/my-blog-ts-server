@@ -1,8 +1,10 @@
 export const checkImage = (tag: string) => {
-    console.log("heeloooo");
-    const result = tag.match(/<img[^>]+>/i);
-    console.log(result);
-    if (result) {
-        let img = result[0];
+    let pattern = /<img[^>]+>/i;
+    let match = pattern.exec(tag);
+    if (match) {
+        console.log(match[0]);
     }
+    // while ((match = pattern.exec(tag))) {
+    //     console.log("111");
+    // }
 };

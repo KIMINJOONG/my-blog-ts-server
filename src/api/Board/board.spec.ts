@@ -79,7 +79,7 @@ describe("GET boards/:id는", () => {
     });
 });
 
-describe("POST boards는", () => {
+describe.only("POST boards는", () => {
     before(() => {
         return sequelize.sync({ force: true });
     });

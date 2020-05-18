@@ -35,7 +35,6 @@ export default {
     ): Promise<void | Response> => {
         try {
             const hashtags = req.body.content.match(/#[^\s]+/g);
-            console.log("들어옴");
             checkImage(req.body.content);
             // const board: Board = await Board.create({
             //     title: req.body.title,
