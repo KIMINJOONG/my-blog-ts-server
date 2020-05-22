@@ -8,7 +8,9 @@ import { responseMessage } from "./responsesMessage";
 import User from "./config/models/User";
 import cors from "cors";
 import { sequelize } from "./config/config";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 
 app.use(

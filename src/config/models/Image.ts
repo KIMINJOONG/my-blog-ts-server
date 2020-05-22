@@ -15,6 +15,12 @@ import Board from "./Board";
 export default class Image extends Model<Image> {
     @Column({
         type: DataType.STRING,
+        comment: "파일키",
+    })
+    key!: string;
+
+    @Column({
+        type: DataType.STRING,
         comment: "파일명",
     })
     name?: string;

@@ -2,6 +2,7 @@ import { Router } from "express";
 import imageController from "./controller";
 import multer from "multer";
 import path from "path";
+import { multerImages } from "../../utils/file";
 
 const router = Router();
 
@@ -20,6 +21,6 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024 }, //용량을 제한 현재 최대 20mb 해커들이 서버를 공격못하게 제한해주는게 좋다
 });
 
-router.post("/upload", upload.array("files"), imageController.upload);
+router.post("/upload", multerImages.array("files"), imageController.upload);
 router.delete("/:imageId", imageController.destroy);
 export default router;
