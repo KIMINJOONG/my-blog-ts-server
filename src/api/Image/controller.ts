@@ -14,19 +14,19 @@ export default {
     },
     destroy: async (req: Request, res: Response, next: NextFunction) => {
         const {
-            params: { fileName },
+            params: { imageKey },
         } = req;
         const fullFileName =
             "https://kohubi-blog.s3.ap-northeast-2.amazonaws.com/images/" +
-            fileName;
-        try {
-            await Image.destroy({ where: { src: fileName } });
-        } catch (error) {
-            // 게시글 수정에서 이미지 파일 삭제가 아닌 업로드중 이미지 삭제는 당연히 에러이므로 상관x
-        }
+            imageKey;
+        // try {
+        //     await Image.destroy({ where: { key: imageKey } });
+        // } catch (error) {
+        //     // 게시글 수정에서 이미지 파일 삭제가 아닌 업로드중 이미지 삭제는 당연히 에러이므로 상관x
+        // }
         const param = {
-            Bucket: "kohubi-blog/images",
-            Key: fileName,
+            Bucket: "kohubi-test/images",
+            Key: imageKey,
         };
 
         const result = await removeMulterImage(param);

@@ -22,5 +22,5 @@ const upload = multer({
 });
 
 router.post("/upload", multerImages.array("files"), imageController.upload);
-router.delete("/:imageId", imageController.destroy);
+router.delete("/:imageKey", imageController.destroy);
 export default router;
