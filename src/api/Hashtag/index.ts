@@ -3,6 +3,7 @@ import hashtagController from "./controller";
 
 const router = Router();
 
-router.get("/:tag", hashtagController.index);
+router.get("/:tag", hashtagController.show);
+router.get("/", hashtagController.index);
 
 export default router;
