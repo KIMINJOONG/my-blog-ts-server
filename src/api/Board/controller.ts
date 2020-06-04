@@ -126,6 +126,24 @@ export default {
                 return next(error);
             }
 
+            const hashtags = content.match(/#[^\s]+/g);
+            if (hashtags) {
+                await Promise.all(
+                    hashtags.map(async (tag: string) => {
+                        const hashtag: Hashtag | null = await Hashtag.findOne({
+                            where: { name: tag.slice(1).toLowerCase() },
+                        });
+                        if (!hashtag) {
+                            const newHashtags: Hashtag = await Hashtag.create({
+                                name: tag.slice(1).toLowerCase(),
+                            });
+                            board.$add("boardHashtag", newHashtags);
+                        }
+                        return;
+                    })
+                );
+            }
+
             await board.update({ title, content });
             await board.save();
             return res.json(
