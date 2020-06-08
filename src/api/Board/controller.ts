@@ -128,10 +128,12 @@ export default {
         return next(error);
       }
 
-      const hashtags = content.match(/#[^\s]+/g);
+      const replaceContent = content.replace(/(<([^>]+)>)/ig, "");
+      const hashtags = replaceContent.match(/#[^\s]+/g);
       if (hashtags) {
         await Promise.all(
           hashtags.map(async (tag: string) => {
+            console.log(tag);
             tag = tag.replace(/<(.|\n)*?>/g, "");
             tag = tag.trim();
             const hashtag: Hashtag | null = await Hashtag.findOne({
