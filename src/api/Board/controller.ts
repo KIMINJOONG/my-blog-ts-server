@@ -37,6 +37,7 @@ export default {
       const board: Board = await Board.create({
         title: req.body.title,
         content: req.body.content,
+        role: 1,
       });
 
       if (hashtags) {
