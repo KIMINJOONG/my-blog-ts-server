@@ -7,7 +7,7 @@ const router = Router();
 router.post("/", isLoggedIn, isAdmin, boardController.create);
 router.get("/", boardController.index);
 router.get("/:id", boardController.detail);
-router.put("/:id", boardController.update);
-router.delete("/:id", boardController.destroy);
+router.put("/:id", isLoggedIn, isAdmin, boardController.update);
+router.delete("/:id", isLoggedIn, isAdmin, boardController.destroy);
 
 export default router;

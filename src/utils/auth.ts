@@ -51,10 +51,19 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// export const isNotLoggedIn = (req:Request, res: Response, next: NextFunction) => {
-//     if (!req.user) {
-//         next();
-//     } else {
-//         res.status(401).send("로그인한 사용자는 접근할 수 없습니다.");
-//     }
-// };
+export const isNotLoggedIn = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.user) {
+    next();
+  } else {
+    const error = {
+      status: 401,
+      data: null,
+      message: "로그인한 사용자는 접근할 수 없습니다.",
+    };
+    next(error);
+  }
+};
