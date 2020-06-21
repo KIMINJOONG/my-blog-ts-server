@@ -8,14 +8,13 @@ import User from "../../config/models/User";
 
 describe("GET boards는", () => {
     before(() => {
-        return sequelize.sync({ force: true });
-    });
-
-    before(() => {
         const boards = [
             { title: "test", content: "내용1" },
             { title: "test2", content: "내용2" },
             { title: "제목3", content: "내용3" },
+            { title: "제목4", content: "내용4" },
+            { title: "제목5", content: "내용5" },
+            { title: "제목6", content: "내용6" },
         ];
         return Board.bulkCreate(boards);
     });
@@ -35,8 +34,30 @@ describe("GET boards는", () => {
             request(app)
                 .get("/boards?title=test")
                 .end((err, res) => {
-                    console.log("yaaa : ", res.body.data);
                     should(res.body.data).be.instanceOf(Array);
+                    done();
+                });
+        });
+    });
+
+    describe("limit가 존재할경우", () => {
+        it("해당 리미트 값만큼만 리스트를 담은 배열로 응답한다", (done) => {
+            request(app)
+                .get("/boards?limit=3")
+                .end((err, res) => {
+                    should(res.body.data).have.length(3);
+                    done();
+                });
+        });
+    });
+
+    describe.only("page가 1이 아닐경우", () => {
+        it("해당 페이지번째의 데이터를 limit값 만큼 담은 배열로 응답한다", (done) => {
+            request(app)
+                .get("/boards?page=2&limit=3")
+                .end((err, res) => {
+                    should(res.body.data[0]).have.property("title", "제목4");
+                    should(res.body.data).have.length(3);
                     done();
                 });
         });
@@ -79,11 +100,8 @@ describe("GET boards/:id는", () => {
     });
 });
 
-describe.only("POST boards는", () => {
-    before(() => {
-        return sequelize.sync({ force: true });
-    });
-    describe.only("성공시", () => {
+describe("POST boards는", () => {
+    describe("성공시", () => {
         before(() => {
             const users = [
                 { userId: "test", name: "alice", password: "test" },

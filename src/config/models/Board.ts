@@ -32,13 +32,13 @@ export default class Board extends Model<Board> {
 
     @ForeignKey(() => User)
     @Column
-    userId!: number;
+    userId?: number;
 
     @BelongsTo(() => User)
-    author!: User;
+    author?: User;
 
     @HasMany(() => Image)
-    Image!: Image;
+    Image?: Image;
 
     @BelongsToMany(() => Hashtag, () => BoardHashtag)
     boardHashtag?: Hashtag[];
