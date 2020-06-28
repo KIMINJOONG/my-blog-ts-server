@@ -3,6 +3,7 @@ import morgan from "morgan";
 import users from "./api/User";
 import boards from "./api/Board";
 import hashtags from "./api/Hashtag";
+import categories from "./api/Category";
 import images from "./api/Image";
 import { responseMessage } from "./responsesMessage";
 import User from "./config/models/User";
@@ -49,6 +50,7 @@ app.use("/users", users);
 app.use("/boards", boards);
 app.use("/hashtags", hashtags);
 app.use("/images", images);
+app.use("/categories", categories);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
