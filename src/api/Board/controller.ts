@@ -5,6 +5,9 @@ import Hashtag from "../../config/models/Hashtag";
 import { Op } from "sequelize";
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
+    const {
+      params: { id },
+    } = req;
     try {
       let boards: Board[];
       let totalCount: number;
@@ -29,6 +32,7 @@ export default {
             title: {
               [Op.like]: "%" + title + "%",
             },
+            category: id,
           },
           limit,
           offset,
@@ -37,7 +41,7 @@ export default {
         boards = rows;
       } else {
         const { count, rows } = await Board.findAndCountAll(
-          { limit, offset },
+          { where: { category: id }, limit, offset },
         );
         totalCount = count;
         boards = rows;
@@ -60,6 +64,7 @@ export default {
         title: req.body.title,
         content: req.body.content,
         role: 1,
+        category: req.body.category,
       });
 
       if (hashtags) {
@@ -125,7 +130,7 @@ export default {
     next: NextFunction,
   ): Promise<void | Response> => {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const { title, content, category } = req.body;
     const parsedId: number = parseInt(id);
 
     let error = {
@@ -171,7 +176,7 @@ export default {
         );
       }
 
-      await board.update({ title, content });
+      await board.update({ title, content, category });
       await board.save();
       return res.json(
         responseMessage({ success: true, message: "" }, board),

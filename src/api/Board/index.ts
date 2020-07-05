@@ -5,6 +5,7 @@ import { isAdmin, isLoggedIn } from "../../utils/auth";
 const router = Router();
 
 router.post("/", isLoggedIn, isAdmin, boardController.create);
+router.get("/category/:id", boardController.index);
 router.get("/", boardController.index);
 router.get("/:id", boardController.detail);
 router.put("/:id", isLoggedIn, isAdmin, boardController.update);
