@@ -26,26 +26,50 @@ export default {
       if (pageNumber > 1) {
         offset = limit * (pageNumber - 1);
       }
-      if (title) {
-        const { count, rows } = await Board.findAndCountAll({
-          where: {
-            title: {
-              [Op.like]: "%" + title + "%",
+
+      if (id) {
+        if (title) {
+          const { count, rows } = await Board.findAndCountAll({
+            where: {
+              title: {
+                [Op.like]: "%" + title + "%",
+              },
+              category: id,
             },
-            category: id,
-          },
-          limit,
-          offset,
-        });
-        totalCount = count;
-        boards = rows;
+            limit,
+            offset,
+          });
+          totalCount = count;
+          boards = rows;
+        } else {
+          const { count, rows } = await Board.findAndCountAll(
+            { where: { category: id }, limit, offset },
+          );
+          totalCount = count;
+          boards = rows;
+        }
       } else {
-        const { count, rows } = await Board.findAndCountAll(
-          { where: { category: id }, limit, offset },
-        );
-        totalCount = count;
-        boards = rows;
+        if (title) {
+          const { count, rows } = await Board.findAndCountAll({
+            where: {
+              title: {
+                [Op.like]: "%" + title + "%",
+              },
+            },
+            limit,
+            offset,
+          });
+          totalCount = count;
+          boards = rows;
+        } else {
+          const { count, rows } = await Board.findAndCountAll(
+            { limit, offset },
+          );
+          totalCount = count;
+          boards = rows;
+        }
       }
+
       return res.json(
         responseMessage({ success: true, message: "" }, boards, totalCount),
       );
