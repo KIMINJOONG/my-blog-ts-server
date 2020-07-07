@@ -9,9 +9,11 @@ interface ICategory {
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const categories = await Category.findAll();
+      const { count, rows } = await Category.findAndCountAll();
+      let categories: Category[] = rows;
+      let totalCount: number = count;
       res.json(
-        responseMessage({ success: true, message: "" }, categories),
+        responseMessage({ success: true, message: "" }, categories, totalCount),
       );
     } catch (e) {
       console.error(e);
