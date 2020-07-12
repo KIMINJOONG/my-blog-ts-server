@@ -12,8 +12,8 @@ export default {
       let boards: Board[];
       let totalCount: number;
       let limit = 10;
-      const title: string = req.query.title;
-      const queryLimit: string = req.query.limit;
+      const title: string = req.query.title!;
+      const queryLimit: string = req.query.limit!;
       const pageNumber: number = req.query.page
         ? parseInt(req.query.page, 10)
         : 0;
