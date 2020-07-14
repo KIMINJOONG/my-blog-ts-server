@@ -12,10 +12,10 @@ export default {
       let boards: Board[];
       let totalCount: number;
       let limit = 10;
-      const title: string = req.query.title!;
-      const queryLimit: string = req.query.limit!;
+      const title: string = req.query.title as string;
+      const queryLimit: string = req.query.limit as string;
       const pageNumber: number = req.query.page
-        ? parseInt(req.query.page, 10)
+        ? parseInt(req.query.page as string, 10)
         : 0;
       let offset: number = 0;
 
