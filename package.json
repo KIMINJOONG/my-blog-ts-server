@@ -9,7 +9,7 @@
         "testHashtag": "mocha --require ts-node/register './src/api/**/hashtag.spec.ts' --timeout 10000",
         "testImage": "mocha --require ts-node/register './src/api/**/image.spec.ts' --timeout 10000",
         "testUser": "mocha --require ts-node/register './src/api/**/user.spec.ts' --timeout 10000",
-        "start": "node dist/app.js",
+        "start": "PRODUCTION=true pm2 start dist/app.js",
         "dev": "nodemon src/app.ts",
         "build": "npx tsc -p ."
     },
