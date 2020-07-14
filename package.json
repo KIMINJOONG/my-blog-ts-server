@@ -11,7 +11,7 @@
         "testUser": "mocha --require ts-node/register './src/api/**/user.spec.ts' --timeout 10000",
         "start": "PRODUCTION=true pm2 start dist/app.js",
         "dev": "nodemon src/app.ts",
-        "build": "npx tsc -p ."
+        "build": "NODE_OPTIONS=--max_old_space_size=4096 npx tsc -p ."
     },
     "keywords": [],
     "author": "",

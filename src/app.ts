@@ -15,10 +15,10 @@ dotenv.config();
 const app = express();
 
 app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  }),
+    cors({
+        origin: true,
+        credentials: true,
+    })
 );
 app.use("/", express.static("uploads"));
 app.use(morgan("dev"));
@@ -27,8 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 export interface Err extends Error {
-  status: number;
-  data?: any;
+    status: number;
+    data?: any;
 }
 // catch 404 and forward to error handler
 // app.use((req, res, next) => {
@@ -39,13 +39,16 @@ export interface Err extends Error {
 // });
 
 declare global {
-  namespace Express {
-    interface Request {
-      user: User;
+    namespace Express {
+        interface Request {
+            user: User;
+        }
     }
-  }
 }
 
+app.get("/", (req, res) => {
+    return res.send("hi back");
+});
 app.use("/users", users);
 app.use("/boards", boards);
 app.use("/hashtags", hashtags);
@@ -54,22 +57,22 @@ app.use("/categories", categories);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
-  // render the error page
-  res.status(err.status || 500);
+    // render the error page
+    res.status(err.status || 500);
 
-  res.json(
-    responseMessage(
-      {
-        success: false,
-        message: err.message,
-      },
-      err.data,
-    ),
-  );
+    res.json(
+        responseMessage(
+            {
+                success: false,
+                message: err.message,
+            },
+            err.data
+        )
+    );
 });
 
 app.listen(4000, () => {
-  console.log("start");
+    console.log("start");
 });
 
 export default app;
