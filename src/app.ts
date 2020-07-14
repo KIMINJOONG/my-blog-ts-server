@@ -46,9 +46,6 @@ declare global {
     }
 }
 
-app.get("/", (req, res) => {
-    return res.send("hi back");
-});
 app.use("/users", users);
 app.use("/boards", boards);
 app.use("/hashtags", hashtags);
