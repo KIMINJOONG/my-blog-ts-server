@@ -53,9 +53,7 @@
         "@types/multer-s3": "^2.7.7",
         "@types/node": "^13.1.2",
         "@types/sequelize": "^4.28.8",
-        "@types/should": "^13.0.0",
         "@types/supertest": "^2.0.8",
-        "@types/validator": "^13.0.0",
-        "should": "^13.2.3"
+        "@types/validator": "^13.0.0"
     }
 }

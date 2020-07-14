@@ -1,7 +1,6 @@
-import { expect } from "chai";
+import { expect, should } from "chai";
 import request from "supertest";
 import app from "../../app";
-import should from "should";
 
 describe("DELETE images/:imageKey 는", () => {
   describe("성공시", () => {
