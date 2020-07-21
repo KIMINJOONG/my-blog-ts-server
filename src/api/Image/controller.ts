@@ -5,11 +5,6 @@ import { removeMulterImage } from "../../utils/file";
 
 export default {
   upload: async (req: any, res: Response, next: NextFunction) => {
-    // console.log("넘어옴");
-    // for (let file of req.files) {
-    //     const { key, originalname } = file;
-    //     Image.create({key, name: originalname});
-    // }
     return res.json(req.files.map((v: Express.MulterS3.File) => v.key));
   },
   destroy: async (req: Request, res: Response, next: NextFunction) => {
