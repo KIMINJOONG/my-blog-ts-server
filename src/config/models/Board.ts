@@ -7,6 +7,7 @@ import {
   BelongsToMany,
   ForeignKey,
   HasMany,
+  Default,
 } from "sequelize-typescript";
 import User from "./User";
 import Hashtag from "./Hashtag";
@@ -35,6 +36,13 @@ export default class Board extends Model<Board> {
     comment: "카테고리",
   })
   category!: number;
+
+  @Default(0)
+  @Column({
+    type: DataType.INTEGER,
+    comment: "조회수",
+  })
+  view!: number;
 
   @ForeignKey(() => User)
   @Column

@@ -22,7 +22,7 @@ app.use(
 );
 app.use("/", express.static("uploads"));
 app.use(morgan("dev"));
-sequelize.sync({ force: false });
+sequelize.sync({ force: false, alter: true });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
