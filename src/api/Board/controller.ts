@@ -40,6 +40,7 @@ export default {
             },
             limit,
             offset,
+            order: [["createdAt", "DESC"]],
           });
           totalCount = count;
           boards = rows;
@@ -48,6 +49,7 @@ export default {
             where: { category: id },
             limit,
             offset,
+            order: [["createdAt", "DESC"]],
           });
           totalCount = count;
           boards = rows;
@@ -62,6 +64,7 @@ export default {
             },
             limit,
             offset,
+            order: [["createdAt", "DESC"]],
           });
           totalCount = count;
           boards = rows;
@@ -69,6 +72,7 @@ export default {
           const { count, rows } = await Board.findAndCountAll({
             limit,
             offset,
+            order: [["createdAt", "DESC"]],
           });
           totalCount = count;
           boards = rows;
