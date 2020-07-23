@@ -86,10 +86,19 @@ export default {
         return next(error);
       }
 
-      const comment: Comment = await Comment.create({
+      let comment: Comment | null = await Comment.create({
         boardId,
         content: req.body.comment,
         userId: req.user.id,
+      });
+      comment = await Comment.findOne({
+        where: {
+          id: comment.id,
+        },
+        include: [{
+          model: User,
+          attributes: ["email", "name"],
+        }],
       });
       return res.json(
         responseMessage({ success: true, message: "" }, comment),
