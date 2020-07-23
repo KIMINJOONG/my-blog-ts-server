@@ -13,6 +13,7 @@ import User from "./User";
 import Hashtag from "./Hashtag";
 import BoardHashtag from "./BoardHashtag";
 import Image from "./Image";
+import Comment from "./Comment";
 
 @Table({
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -56,4 +57,7 @@ export default class Board extends Model<Board> {
 
   @BelongsToMany(() => Hashtag, () => BoardHashtag)
   boardHashtag?: Hashtag[];
+
+  @HasMany(() => Comment)
+  comments?: Comment[];
 }
