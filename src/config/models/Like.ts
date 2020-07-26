@@ -13,12 +13,10 @@ import User from "./User";
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
   collate: "utf8mb4_general_ci",
 })
-export default class Comment extends Model<Comment> {
-  @Column({
-    type: DataType.STRING,
-    comment: "댓글내용",
-  })
-  content?: string;
+export default class Like extends Model<Like> {
+  @ForeignKey(() => Board)
+  @Column
+  boardId?: number;
 
   @ForeignKey(() => User)
   @Column
@@ -26,8 +24,4 @@ export default class Comment extends Model<Comment> {
 
   @BelongsTo(() => User)
   user!: User;
-
-  @ForeignKey(() => Board)
-  @Column
-  boardId?: number;
 }

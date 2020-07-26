@@ -3,8 +3,8 @@ import { responseMessage } from "../../responsesMessage";
 import Board from "../../config/models/Board";
 import Hashtag from "../../config/models/Hashtag";
 import { Op } from "sequelize";
-import { sequelize } from "../../config/config";
 import { Sequelize } from "sequelize";
+import Like from "../../config/models/Like";
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -111,6 +111,7 @@ export default {
             tag = tag.trim();
             const newHashtags: Hashtag = await Hashtag.create({
               name: tag.slice(1).toLowerCase(),
+              category: req.body.category,
             });
             board.$add("boardHashtag", newHashtags);
             return;
@@ -148,7 +149,12 @@ export default {
       return next(error);
     }
     try {
-      const board = await Board.findOne({ where: { id: parsedInt } });
+      const board = await Board.findOne({
+        where: { id: parsedInt },
+        include: [{
+          model: Like,
+        }],
+      });
       if (!board) {
         error.status = 400;
         error.message = "존재하지 않는 게시글입니다.";
@@ -208,6 +214,7 @@ export default {
             if (!hashtag) {
               const newHashtags: Hashtag = await Hashtag.create({
                 name: tag.slice(1).toLowerCase(),
+                category,
               });
               board.$add("boardHashtag", newHashtags);
             }

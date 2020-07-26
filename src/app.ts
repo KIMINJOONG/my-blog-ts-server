@@ -6,6 +6,7 @@ import hashtags from "./api/Hashtag";
 import categories from "./api/Category";
 import images from "./api/Image";
 import comments from "./api/Comment";
+import likes from "./api/Like";
 import { responseMessage } from "./responsesMessage";
 import User from "./config/models/User";
 import cors from "cors";
@@ -56,6 +57,7 @@ app.use("/hashtags", hashtags);
 app.use("/images", images);
 app.use("/categories", categories);
 app.use("/comments", comments);
+app.use("/likes", likes);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
