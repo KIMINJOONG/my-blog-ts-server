@@ -5,6 +5,7 @@ import Hashtag from "../../config/models/Hashtag";
 import { Op } from "sequelize";
 import { Sequelize } from "sequelize";
 import Like from "../../config/models/Like";
+import Category from "../../config/models/Category";
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -36,7 +37,7 @@ export default {
               title: {
                 [Op.like]: "%" + title + "%",
               },
-              category: id,
+              categoryId: id,
             },
             limit,
             offset,
@@ -46,7 +47,7 @@ export default {
           boards = rows;
         } else {
           const { count, rows } = await Board.findAndCountAll({
-            where: { category: id },
+            where: { categoryId: id },
             limit,
             offset,
             order: [["createdAt", "DESC"]],
@@ -70,6 +71,9 @@ export default {
           boards = rows;
         } else {
           const { count, rows } = await Board.findAndCountAll({
+            include: [
+              { model: Category },
+            ],
             limit,
             offset,
             order: [["createdAt", "DESC"]],
@@ -101,7 +105,7 @@ export default {
         title: req.body.title,
         content: req.body.content,
         role: 1,
-        category: req.body.category,
+        categoryId: req.body.category,
       });
 
       if (hashtags) {
@@ -111,7 +115,7 @@ export default {
             tag = tag.trim();
             const newHashtags: Hashtag = await Hashtag.create({
               name: tag.slice(1).toLowerCase(),
-              category: req.body.category,
+              categoryId: req.body.category,
             });
             board.$add("boardHashtag", newHashtags);
             return;
@@ -223,7 +227,7 @@ export default {
         );
       }
 
-      await board.update({ title, content, category });
+      await board.update({ title, content, categoryId: category });
       await board.save();
       return res.json(
         responseMessage({ success: true, message: "" }, board),

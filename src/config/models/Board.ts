@@ -15,6 +15,7 @@ import BoardHashtag from "./BoardHashtag";
 import Image from "./Image";
 import Comment from "./Comment";
 import Like from "./Like";
+import Category from "./Category";
 
 @Table({
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -33,11 +34,9 @@ export default class Board extends Model<Board> {
   })
   content!: string;
 
-  @Column({
-    type: DataType.INTEGER,
-    comment: "카테고리",
-  })
-  category!: number;
+  @ForeignKey(() => Category)
+  @Column
+  categoryId!: number;
 
   @Default(0)
   @Column({
@@ -64,4 +63,7 @@ export default class Board extends Model<Board> {
 
   @HasMany(() => Like)
   likes?: Like[];
+
+  @BelongsTo(() => Category)
+  category?: Category;
 }

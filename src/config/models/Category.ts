@@ -1,4 +1,5 @@
-import { Table, Model, Column, DataType } from "sequelize-typescript";
+import { Table, Model, Column, DataType, HasMany } from "sequelize-typescript";
+import Board from "./Board";
 
 @Table({
   charset: "utf8mb4", // 한글에 이모티콘까지 가능
@@ -16,4 +17,7 @@ export default class Category extends Model<Category> {
     comment: "코드명",
   })
   name!: string;
+
+  @HasMany(() => Board)
+  boards?: Board;
 }
