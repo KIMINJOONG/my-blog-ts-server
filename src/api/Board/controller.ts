@@ -6,6 +6,7 @@ import { Op } from "sequelize";
 import { Sequelize } from "sequelize";
 import Like from "../../config/models/Like";
 import Category from "../../config/models/Category";
+import { getToday } from "../../utils/date";
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -287,5 +288,23 @@ export default {
     return res.json(
       responseMessage({ success: true, message: "" }, countByDate),
     );
+  },
+  getCountByToday: async (req: Request, res: Response) => {
+    try {
+      let today = getToday();
+      const { count: countByToday } = await Board.findAndCountAll({
+        where: Sequelize.where(
+          Sequelize.fn("date", Sequelize.col("createdAt")),
+          "=",
+          today,
+        ),
+      });
+
+      return res.json(
+        responseMessage({ success: true, message: "" }, countByToday),
+      );
+    } catch (error) {
+      console.log("error :", error);
+    }
   },
 };
