@@ -292,16 +292,19 @@ export default {
   getCountByToday: async (req: Request, res: Response) => {
     try {
       let today = getToday();
-      const { count: countByToday } = await Board.findAndCountAll({
+      const { count: countByToday, rows } = await Board.findAndCountAll({
         where: Sequelize.where(
-          Sequelize.fn("date", Sequelize.col("createdAt")),
+          Sequelize.fn("date", Sequelize.col("Board.createdAt")),
           "=",
           today,
         ),
+        include: [
+          { model: Category },
+        ],
       });
 
       return res.json(
-        responseMessage({ success: true, message: "" }, countByToday),
+        responseMessage({ success: true, message: "" }, rows, countByToday),
       );
     } catch (error) {
       console.log("error :", error);
