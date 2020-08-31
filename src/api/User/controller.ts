@@ -198,8 +198,9 @@ export default {
         return next(error);
       }
       const token = createJWT(user.id);
+      res.cookie("token", token);
       return res.json(
-        responseMessage({ success: true, message: "" }, token),
+        responseMessage({ success: true, message: "" }, user),
       );
     } catch (error) {
       next(error);
