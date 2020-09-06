@@ -7,6 +7,8 @@ import { Sequelize } from "sequelize";
 import Like from "../../config/models/Like";
 import Category from "../../config/models/Category";
 import { getToday } from "../../utils/date";
+import Comment from "../../config/models/Comment";
+import User from "../../config/models/User";
 export default {
   index: async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -158,6 +160,12 @@ export default {
         where: { id: parsedInt },
         include: [{
           model: Like,
+        }, {
+          model: Comment,
+          include: [{
+            model: User,
+            attributes: ["email", "name"],
+          }],
         }],
       });
       if (!board) {
