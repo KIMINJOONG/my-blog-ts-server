@@ -34,6 +34,7 @@ app.use(
         cookie: {
             httpOnly: true,
             secure: false, //https를 쓸때 true
+            domain: "kohubi.xyz",
         },
         name: "rnbck",
     })
