@@ -19,25 +19,24 @@ dotenv.config();
 const app = express();
 
 app.use(
-    cors({
-        origin: true,
-        credentials: true,
-    })
+  cors({
+    origin: true,
+    credentials: true,
+  }),
 );
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.set("trust proxy", 1);
 app.use(
-    expressSession({
-        resave: false,
-        saveUninitialized: false,
-        secret: process.env.COOKIE_SECRET!,
-        cookie: {
-            httpOnly: true,
-            secure: false, //https를 쓸때 true
-            domain: "kohubi.xyz",
-        },
-        name: "rnbck",
-    })
+  expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET!,
+    cookie: {
+      httpOnly: true,
+      secure: false, //https를 쓸때 true
+    },
+    name: "rnbck",
+  }),
 );
 app.use("/", express.static("uploads"));
 app.use(morgan("dev"));
@@ -46,8 +45,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 export interface Err extends Error {
-    status: number;
-    data?: any;
+  status: number;
+  data?: any;
 }
 // catch 404 and forward to error handler
 // app.use((req, res, next) => {
@@ -58,15 +57,15 @@ export interface Err extends Error {
 // });
 
 declare global {
-    namespace Express {
-        interface Request {
-            user: User;
-        }
+  namespace Express {
+    interface Request {
+      user: User;
     }
+  }
 }
 
 app.get("/", (req, res) => {
-    return res.send("api");
+  return res.send("api");
 });
 app.use("/users", users);
 app.use("/boards", boards);
@@ -78,22 +77,22 @@ app.use("/likes", likes);
 
 // error handle
 app.use((err: Err, req: Request, res: Response, next: NextFunction) => {
-    // render the error page
-    res.status(err.status || 500);
+  // render the error page
+  res.status(err.status || 500);
 
-    res.json(
-        responseMessage(
-            {
-                success: false,
-                message: err.message,
-            },
-            err.data
-        )
-    );
+  res.json(
+    responseMessage(
+      {
+        success: false,
+        message: err.message,
+      },
+      err.data,
+    ),
+  );
 });
 
 app.listen(4000, () => {
-    console.log("start");
+  console.log("start");
 });
 
 export default app;
