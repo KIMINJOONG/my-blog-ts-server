@@ -153,6 +153,12 @@ export default {
                 return next(error);
             }
 
+            if (comment.userId !== req.user.id) {
+                error.status = 400;
+                error.message = "다른사람의 댓글은 수정할수없습니다.";
+                return next(error);
+            }
+
             await comment.update({ content });
             await comment.save();
             return res.json(
@@ -203,6 +209,12 @@ export default {
             if (!comment) {
                 error.status = 400;
                 error.message = "존재하지않는 댓글입니다.";
+                return next(error);
+            }
+
+            if (comment.userId !== req.user.id) {
+                error.status = 400;
+                error.message = "다른사람의 댓글은 삭제할수없습니다.";
                 return next(error);
             }
 
