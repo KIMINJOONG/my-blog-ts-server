@@ -117,7 +117,7 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         const { boardId, commentId } = req.params;
-        const { content } = req.body;
+        const { comment: content } = req.body;
         const parsedId: number = parseInt(boardId);
         const parsedCommentId = parseInt(commentId);
 
