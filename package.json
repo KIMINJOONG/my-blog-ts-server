@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "testComment": "mocha --require ts-node/register './src/api/**/comment.spec.ts' --timeout 10000",
         "testBoard": "mocha --require ts-node/register './src/api/**/board.spec.ts' --timeout 10000",
         "testCategory": "mocha --require ts-node/register './src/api/**/category.spec.ts' --timeout 10000",
         "testHashtag": "mocha --require ts-node/register './src/api/**/hashtag.spec.ts' --timeout 10000",
