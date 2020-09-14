@@ -145,6 +145,12 @@ export default {
 
             const comment = await Comment.findOne({
                 where: { id: commentId },
+                include: [
+                    {
+                        model: User,
+                        attributes: ["email", "name"],
+                    },
+                ],
             });
 
             if (!comment) {
