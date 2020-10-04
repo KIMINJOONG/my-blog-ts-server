@@ -107,7 +107,14 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         try {
-            const hashtags = req.body.content.match(/#[^\s]+/g);
+            let hashtags = req.body.content
+                .match(/<p>(.*)<\/\p>/g)
+                .join("")
+                .match(/#[^\s]+/g);
+
+            hashtags = hashtags.join(" ");
+            hashtags = hashtags.replace(/<\/\p>/g, "");
+            hashtags = hashtags.match(/#[^\s]+/g);
             const board: Board = await Board.create({
                 title: req.body.title,
                 content: req.body.content,
@@ -224,7 +231,10 @@ export default {
             }
 
             const replaceContent = content.replace(/(<([^>]+)>)/gi, "");
-            const hashtags = replaceContent.match(/#[^\s]+/g);
+            let hashtags = replaceContent.match(/#[^\s]+/g);
+            hashtags = hashtags.join(" ");
+            hashtags = hashtags.replace(/<\/\p>/g, "");
+            hashtags = hashtags.match(/#[^\s]+/g);
             if (hashtags) {
                 await Promise.all(
                     hashtags.map(async (tag: string) => {
