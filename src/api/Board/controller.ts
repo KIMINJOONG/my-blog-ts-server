@@ -107,14 +107,14 @@ export default {
         next: NextFunction
     ): Promise<void | Response> => {
         try {
-            let hashtags = req.body.content
-                .match(/<p>(.*)<\/\p>/g)
-                .join("")
-                .match(/#[^\s]+/g);
-
-            hashtags = hashtags.join(" ");
-            hashtags = hashtags.replace(/<\/\p>/g, "");
-            hashtags = hashtags.match(/#[^\s]+/g);
+            let hashtags = req.body.content.match(/<p>(.*)<\/\p>/g);
+            if (hashtags) {
+                hashtags = hashtags.join("");
+                hashtags = hashtags.match(/#[^\s]+/g);
+                hashtags = hashtags.join(" ");
+                hashtags = hashtags.replace(/<\/\p>/g, "");
+                hashtags = hashtags.match(/#[^\s]+/g);
+            }
             const board: Board = await Board.create({
                 title: req.body.title,
                 content: req.body.content,
