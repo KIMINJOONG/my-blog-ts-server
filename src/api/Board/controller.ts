@@ -112,7 +112,7 @@ export default {
         title: req.body.title,
         content: req.body.content,
         role: 1,
-        categoryId: req.body.category,
+        categoryId: req.body.categoryId,
       });
 
       if (hashtags) {
@@ -198,7 +198,7 @@ export default {
     next: NextFunction,
   ): Promise<void | Response> => {
     const { id } = req.params;
-    const { title, content, category } = req.body;
+    const { title, content, categoryId } = req.body;
     const parsedId: number = parseInt(id);
 
     let error = {
@@ -235,7 +235,7 @@ export default {
             if (!hashtag) {
               const newHashtags: Hashtag = await Hashtag.create({
                 name: tag.slice(1).toLowerCase(),
-                category,
+                categoryId,
               });
               board.$add("boardHashtag", newHashtags);
             }
@@ -244,7 +244,7 @@ export default {
         );
       }
 
-      await board.update({ title, content, categoryId: category });
+      await board.update({ title, content, categoryId });
       await board.save();
       return res.json(
         responseMessage({ success: true, message: "" }, board),
