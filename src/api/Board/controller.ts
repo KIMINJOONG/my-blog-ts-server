@@ -216,6 +216,20 @@ export default {
     try {
       const board = await Board.findOne({
         where: { id: parsedId },
+        include: [
+          {
+            model: Like,
+          },
+          {
+            model: Comment,
+            include: [
+              {
+                model: User,
+                attributes: ["email", "name"],
+              },
+            ],
+          },
+        ],
       });
       if (!board) {
         error.status = 400;
@@ -244,7 +258,9 @@ export default {
         );
       }
 
+
       await board.update({ title, content, categoryId });
+      
       await board.save();
       return res.json(
         responseMessage({ success: true, message: "" }, board),
