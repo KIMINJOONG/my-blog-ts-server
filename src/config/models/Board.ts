@@ -34,6 +34,12 @@ export default class Board extends Model<Board> {
   })
   content!: string;
 
+  @Column({
+    type: DataType.TEXT,
+    comment: "해쉬태그"
+  })
+  hashtags!:string;
+
   @ForeignKey(() => Category)
   @Column
   categoryId!: number;

@@ -99,20 +99,20 @@ describe("GET boards/:id는", () => {
   });
 });
 
-describe("POST boards는", () => {
-  describe("성공시", () => {
-    before(() => {
-      const users = [
-        { userId: "test", name: "alice", password: "test" },
-        { userId: "hehe", name: "bek", password: "test" },
-        { userId: "huhu", name: "chris", password: "test" },
-      ];
-      return User.bulkCreate(users);
-    });
+describe.only("POST boards는", () => {
+  describe.only("성공시", () => {
+    // before(() => {
+    //   const users = [
+    //     { userId: "test", name: "alice", password: "test" },
+    //     { userId: "hehe", name: "bek", password: "test" },
+    //     { userId: "huhu", name: "chris", password: "test" },
+    //   ];
+    //   return User.bulkCreate(users);
+    // });
     let body: any;
     let board = {
       title: "제목",
-      content: "내용",
+      content: `<div style="box-sizing: border-box; max-width: 100%; white-space: pre; color: rgb(238, 255, 255); background-color: rgb(38, 50, 56); font-family: menlo, monaco, &quot;courier new&quot;, monospace; font-weight: normal; font-size: 12px; line-height: 18px;"><div style="box-sizing: border-box; max-width: 100%; white-space: pre-wrap;"><span style="box-sizing: border-box; color: rgb(137, 221, 255);">@</span><span style="box-sizing: border-box; color: rgb(130, 170, 255);">ForeignKey</span><span style="box-sizing: border-box; color: rgb(238, 255, 255);">(</span><span style="box-sizing: border-box; color: rgb(137, 221, 255);">()</span><span style="box-sizing: border-box; color: rgb(199, 146, 234);">=&gt;</span><span style="box-sizing: border-box; color: rgb(255, 203, 107);">Board</span><span style="box-sizing: border-box; color: rgb(238, 255, 255);">)</span></div><div style="box-sizing: border-box; max-width: 100%; white-space: pre-wrap;"><span style="box-sizing: border-box; color: rgb(137, 221, 255);">@</span><span style="box-sizing: border-box; color: rgb(130, 170, 255);">Column</span></div><div style="box-sizing: border-box; max-width: 100%; white-space: pre-wrap;"><span style="box-sizing: border-box; color: rgb(238, 255, 255);">boardId</span><span style="box-sizing: border-box; color: rgb(137, 221, 255);">?:</span><span style="box-sizing: border-box; color: rgb(255, 203, 107);">number</span><span style="box-sizing: border-box; color: rgb(137, 221, 255);">;</span></div></div><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1em; max-width: 100%;"><br style="box-sizing: border-box; color: rgba(0, 0, 0, 0.65); font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-style: initial; text-decoration-color: initial;"></p><p>#비보이 #김인중</p>"`,
     };
 
     it("생성된 보드객체를 반환함", (done) => {
@@ -211,7 +211,7 @@ describe("GET /boards/countByDate는", () => {
   });
 });
 
-describe.only("GET /boards/countByToday는", () => {
+describe("GET /boards/countByToday는", () => {
   describe("성공시", () => {
     it("오늘 게시글 개수를 리턴", (done) => {
       request(app)
