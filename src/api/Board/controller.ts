@@ -42,6 +42,12 @@ export default {
               },
               categoryId: id,
             },
+            include: [
+              {
+                model: Comment,
+                attributes: ["content"],
+              },
+            ],
             limit,
             offset,
             order: [["createdAt", "DESC"]],
@@ -72,6 +78,12 @@ export default {
                 [Op.like]: "%" + title + "%",
               },
             },
+            include: [
+              {
+                model: Comment,
+                attributes: ["content"],
+              },
+            ],
             limit,
             offset,
             order: [["createdAt", "DESC"]],
