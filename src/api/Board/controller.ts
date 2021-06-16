@@ -42,6 +42,7 @@ export default {
               },
               categoryId: id,
             },
+            attributes: ['id', 'title', 'view', 'createdAt'],
             include: [
               {
                 model: Comment,
@@ -57,6 +58,7 @@ export default {
         } else {
           const { count, rows } = await Board.findAndCountAll({
             where: { categoryId: id },
+            attributes: ['id', 'title', 'view', 'createdAt'],
             include: [
               {
                 model: Comment,
@@ -78,6 +80,7 @@ export default {
                 [Op.like]: "%" + title + "%",
               },
             },
+            attributes: ['id', 'title', 'view', 'createdAt'],
             include: [
               {
                 model: Comment,
@@ -93,6 +96,7 @@ export default {
         } else {
           const { count, rows } = await Board.findAndCountAll({
             include: [{ model: Category }],
+            attributes: ['id', 'title', 'view', 'createdAt'],
             limit,
             offset,
             order: [["createdAt", "DESC"]],
